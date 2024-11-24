@@ -12,7 +12,7 @@ Route::post('/register/admin', [AdminAuthContorller::class, 'register']);
 Route::post('/admin/login', [AdminAuthContorller::class, 'login']);
 Route::middleware('auth:sanctum')->group(function () {
     // Logout admin
-    Route::post('/admin/logout', [AdminController::class, 'logout']);
+    Route::post('/admin/logout', [AdminAuthContorller::class, 'logout']);
     // show login admin information
     Route::get('admin/info', [AdminController::class, 'showAdminInfo']);
     // Show all admin list
