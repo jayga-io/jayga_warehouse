@@ -101,6 +101,9 @@ class AdminAuthContorller extends Controller
             // Generate a new token for the authenticated admin
             $token = $admin->createToken('AdminAppToken')->plainTextToken;
 
+            // Hide the password field
+            $admin->makeHidden('password');
+
             // Return a response with the token
             return response()->json([
                 'message' => 'Login successful',
@@ -111,10 +114,11 @@ class AdminAuthContorller extends Controller
             // Return a response with error message
             return response()->json([
                 'error' => 'Something went wrong. Please try again.',
-                'message' => $e->getMessage()
+                'message' => $e->getMessage(),
             ], 500);
         }
     }
+
     // Show login admin information
     public function showAdminInfo(Request $request)
     {
