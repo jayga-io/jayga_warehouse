@@ -20,6 +20,7 @@ return new class extends Migration
             $table->string('auth_token')->nullable();
             $table->string('type');
             $table->string('status')->default('1');
+            $table->string('admin_image');
             $table->string('role');
             $table->timestamps();
         });
