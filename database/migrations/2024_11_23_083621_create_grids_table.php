@@ -13,7 +13,7 @@ return new class extends Migration
     {
         Schema::create('grids', function (Blueprint $table) {
             $table->id();
-            $table->id('warehouse_id');
+            $table->unsignedBigInteger('warehouse_id');
             $table->string('grid_code');
             $table->string('size');
             $table->string('has_rack')->default('0');

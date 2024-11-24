@@ -13,8 +13,8 @@ return new class extends Migration
     {
         Schema::create('items', function (Blueprint $table) {
             $table->id('item_id');
-            $table->id('user_id');
-            $table->id('grid_id');
+            $table->unsignedBigInteger('user_id');
+            $table->unsignedBigInteger('grid_id');
             $table->string('item_name');
             $table->string('requst_quantity');
             $table->string('recived_quantity')->nullable();

@@ -8,4 +8,9 @@ use Illuminate\Database\Eloquent\Model;
 class warehouse_type extends Model
 {
     use HasFactory;
+
+    protected $fillable = [
+        'type_name',
+        'type_name'
+    ];
 }

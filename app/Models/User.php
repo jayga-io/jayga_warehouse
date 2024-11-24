@@ -21,6 +21,18 @@ class User extends Authenticatable
         'name',
         'email',
         'password',
+        'name',
+        'company_name',
+        'industry_type',
+        'status',
+        'is_suspended',
+        'fcm_token',
+        'auth_token',
+        'profile_image',
+        'description',
+        'address',
+        'latitude',
+        'longitude',
     ];
 
     /**

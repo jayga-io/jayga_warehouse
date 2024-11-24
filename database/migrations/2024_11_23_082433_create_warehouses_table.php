@@ -29,7 +29,7 @@ return new class extends Migration
             $table->string('area');
             $table->string('is_active')->default('1');
             $table->string('warehouse_image');
-            $table->id('warehouse_type_id');
+            $table->unsignedBigInteger('warehouse_type_id');
             $table->timestamps();
         });
     }

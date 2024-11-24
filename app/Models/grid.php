@@ -8,4 +8,14 @@ use Illuminate\Database\Eloquent\Model;
 class grid extends Model
 {
     use HasFactory;
+    protected $fillable = [
+        'warehouse_id',
+        'grid_code',
+        'size',
+        'has_rack',
+        'rack_multiplier',
+        'status',
+        'type',
+        'is_occupied'
+    ];
 }
