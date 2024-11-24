@@ -14,4 +14,6 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::get('admin/info', [AdminAuthContorller::class, 'showAdminInfo']);
     // Show all admin list
     Route::get('admin/list', [AdminAuthContorller::class, 'listAdmins']);
+    // Logout admin
+    Route::post('/admin/logout', [AdminAuthContorller::class, 'logout']);
 });

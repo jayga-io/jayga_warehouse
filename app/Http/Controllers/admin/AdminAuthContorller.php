@@ -154,4 +154,28 @@ class AdminAuthContorller extends Controller
             ], 500);
         }
     }
+    // Admin logout
+    public function logout(Request $request)
+    {
+        try {
+            // Revoke the user's current token (logout the user)
+            Auth::user()->tokens->each(function ($token) {
+                $token->delete();
+            });
+
+            // Return a response confirming the logout
+            return response()->json([
+                'message' => 'Successfully logged out Admin'
+            ], 200);
+        } catch (\Exception $e) {
+            // Log the error if any
+            Log::error('Error logging out: ' . $e->getMessage());
+
+            // Return an error response
+            return response()->json([
+                'error' => 'Failed to log out',
+                'message' => $e->getMessage()
+            ], 500);
+        }
+    }
 }
