@@ -18,4 +18,9 @@ class updatewarehousetype extends Model
     {
         return $this->belongsTo(admin::class, 'admin_id');
     }
+
+    public function warehouseType()
+    {
+        return $this->belongsTo(warehouse_type::class, 'warehousetypes_id');
+    }
 }

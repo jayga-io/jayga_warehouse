@@ -78,10 +78,15 @@ class WarehouseTypeContorller extends Controller
     public function getWarehouseTypeById($id)
     {
         try {
-            // Find the warehouse type by ID along with the associated admin information
-            $warehouseType = warehouse_type::with('admin')->find($id);
+            // Find the warehouse type by ID along with the associated admin information and updates
+            $warehouseType = warehouse_type::with([
+                'admin',
+                'updates' => function ($query) {
+                    $query->with('admin');
+                }
+            ])->find($id);
 
-            // Check if warehouse type exists
+            // Check if the warehouse type exists
             if (!$warehouseType) {
                 return response()->json([
                     'error' => 'Warehouse type not found',
@@ -101,6 +106,7 @@ class WarehouseTypeContorller extends Controller
             ], 500);
         }
     }
+
 
     // Update warehouse type
     public function updateWarehouseType(Request $request, $id)
@@ -148,4 +154,38 @@ class WarehouseTypeContorller extends Controller
             ], 500);
         }
     }
+
+    // Delete warehouse type
+    public function deleteWarehouseType($id)
+    {
+        try {
+            // Find the warehouse type by ID
+            $warehouseType = warehouse_type::find($id);
+
+            // Check if the warehouse type exists
+            if (!$warehouseType) {
+                return response()->json([
+                    'error' => 'Warehouse type not found',
+                ], 404);
+            }
+
+            // Manually delete related records from the updatewarehousetype table
+            updatewarehousetype::where('warehousetypes_id', $id)->delete();
+
+            // Delete the warehouse type
+            $warehouseType->delete();
+
+            // Return a success response
+            return response()->json([
+                'message' => 'Warehouse type and its related records deleted successfully',
+            ], 200);
+        } catch (\Exception $e) {
+            // Handle any errors that occur
+            return response()->json([
+                'error' => 'Something went wrong',
+                'message' => $e->getMessage(),
+            ], 500);
+        }
+    }
+
 }

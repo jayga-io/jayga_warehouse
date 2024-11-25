@@ -37,8 +37,9 @@ Route::middleware('auth:sanctum')->group(function () {
     // shwo all warehouse types
     Route::get('admin/warehouse-types', [WarehouseTypeContorller::class, 'getAllWarehouseTypes']);
     // shwo id wise warehouse types
-    Route::get('admin/warehouse-type/{id}', [WarehouseTypeContorller::class, 'getWarehouseTypeById']);
+    Route::get('admin/warehouse-types/{id}', [WarehouseTypeContorller::class, 'getWarehouseTypeById']);
     // update warehouse type
-    Route::put('admin/warehouse-type/{id}/update', [WarehouseTypeContorller::class, 'updateWarehouseType']);
-
+    Route::put('admin/warehouse-types/{id}/update', [WarehouseTypeContorller::class, 'updateWarehouseType']);
+    // Delete a warehouse type
+    Route::delete('admin/warehouse-types/{id}/delete', [WarehouseTypeContorller::class, 'deleteWarehouseType']);
 });
