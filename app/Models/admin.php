@@ -22,4 +22,10 @@ class admin extends Authenticatable
         'role',
         'admin_image',
     ];
+
+    // Define the relationship with WarehouseType
+    public function warehouseTypes()
+    {
+        return $this->hasMany(warehouse_type::class);
+    }
 }

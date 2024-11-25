@@ -89,12 +89,27 @@ class AdminAuthContorller extends Controller
             ]);
 
             // Attempt to find the admin by email
-            $admin = Admin::where('email', $request->email)->first();
+            $admin = admin::where('email', $request->email)->first();
 
-            // Check if admin exists and password is correct
-            if (!$admin || !Hash::check($request->password, $admin->password)) {
+            // Check if admin exists
+            if (!$admin) {
                 throw ValidationException::withMessages([
-                    'email' => ['The provided credentials are incorrect.'],
+                    'email' => ['The provided email does not exist.'],
+                ]);
+            }
+
+            // Check if the admin's status is 0 (inactive)
+            if ($admin->status == 0) {
+                return response()->json([
+                    'error' => 'Your account is not valid. Please contact the super admin.',
+                    'status' => false, // Returning status as false
+                ], 403); // 403 Forbidden status code
+            }
+
+            // Check if the password is correct
+            if (!Hash::check($request->password, $admin->password)) {
+                throw ValidationException::withMessages([
+                    'password' => ['The provided credentials are incorrect.'],
                 ]);
             }
 
@@ -119,6 +134,7 @@ class AdminAuthContorller extends Controller
         }
     }
 
+
     // Admin logout
     public function logout(Request $request)
     {
@@ -140,6 +156,104 @@ class AdminAuthContorller extends Controller
             return response()->json([
                 'error' => 'Failed to log out',
                 'message' => $e->getMessage()
+            ], 500);
+        }
+    }
+
+    // update the login admin profile
+    public function updateProfile(Request $request)
+    {
+        try {
+            // Get the authenticated admin
+            $admin = $request->user();
+
+            // Validate input
+            $request->validate([
+                'name' => 'string|max:255',
+                'email' => 'string|email|max:255|unique:admins,email,' . $admin->id,
+                'type' => 'string',
+                'role' => 'string',
+                'admin_image' => 'image|mimes:jpeg,png,jpg,gif|max:2048', // Validate optional image
+            ]);
+
+            // Handle the image upload if provided
+            if ($request->hasFile('admin_image')) {
+                // Generate a unique file name
+                $imageName = uniqid() . '.' . $request->file('admin_image')->getClientOriginalExtension();
+
+                // Store the new image in 'public/admin_images'
+                $imagePath = $request->file('admin_image')->storeAs('public/admin_images', $imageName);
+
+                // Update admin image path
+                $admin->admin_image = 'admin_images/' . $imageName;
+            }
+
+            // Update the admin's profile information
+            $admin->update($request->only(['name', 'email', 'type', 'role']));
+
+            // Save the changes
+            $admin->save();
+
+            // Return success response
+            return response()->json([
+                'message' => 'Profile updated successfully',
+                'admin' => $admin,
+            ], 200);
+        } catch (\Illuminate\Validation\ValidationException $e) {
+            // Handle validation exceptions
+            Log::error('Validation error during profile update: ' . $e->getMessage());
+            return response()->json([
+                'error' => 'Validation error',
+                'message' => $e->getMessage()
+            ], 422);
+        } catch (\Exception $e) {
+            // Handle any other general exceptions
+            Log::error('Error during profile update: ' . $e->getMessage());
+            return response()->json([
+                'error' => 'Something went wrong',
+                'message' => 'An unexpected error occurred. Please try again.'
+            ], 500);
+        }
+    }
+
+    // change login admin password
+    public function changePassword(Request $request)
+    {
+        try {
+            // Validate the request data
+            $request->validate([
+                'current_password' => 'required|string',
+                'new_password' => 'required|string|min:8|confirmed', // Ensure 'new_password_confirmation' is sent
+            ]);
+
+            // Get the authenticated admin
+            $admin = $request->user();
+
+            // Check if the current password matches
+            if (!Hash::check($request->current_password, $admin->password)) {
+                throw ValidationException::withMessages([
+                    'current_password' => ['The provided password does not match our records.'],
+                ]);
+            }
+
+            // Update the admin's password
+            $admin->update([
+                'password' => Hash::make($request->new_password),
+            ]);
+
+            // Return success response
+            return response()->json([
+                'message' => 'Password updated successfully.',
+            ], 200);
+        } catch (ValidationException $e) {
+            return response()->json([
+                'error' => 'Validation error',
+                'message' => $e->errors(),
+            ], 422);
+        } catch (\Exception $e) {
+            return response()->json([
+                'error' => 'Something went wrong',
+                'message' => $e->getMessage(),
             ], 500);
         }
     }
