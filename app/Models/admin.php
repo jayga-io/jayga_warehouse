@@ -28,4 +28,9 @@ class admin extends Authenticatable
     {
         return $this->hasMany(warehouse_type::class);
     }
+
+    public function adminActivities()
+    {
+        return $this->hasMany(adminactivity::class);
+    }
 }

@@ -2,7 +2,7 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\admin\{AdminAuthContorller, AdminController};
-use App\Http\Controllers\warehouse\WarehouseTypeContorller;
+use App\Http\Controllers\warehouse\{WarehouseTypeContorller, WarehouseContorller};
 
 // Admin Routes
 // Admin registration
@@ -42,4 +42,18 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::put('admin/warehouse-types/{id}/update', [WarehouseTypeContorller::class, 'updateWarehouseType']);
     // Delete a warehouse type
     Route::delete('admin/warehouse-types/{id}/delete', [WarehouseTypeContorller::class, 'deleteWarehouseType']);
+
+    // Warehouse routes
+    // Create warehouse
+    Route::post('/warehouses', [WarehouseContorller::class, 'storeWarehouse']);
+    // show all warehouse
+    Route::get('/warehouses', [WarehouseContorller::class, 'showWarehouse']);
+    // shwo warehouse by id
+    Route::get('/warehouses/{id}', [WarehouseContorller::class, 'showWarehouseById']);
+    // change status
+    Route::put('/warehouses/{id}/toggle-active', [WarehouseContorller::class, 'toggleIsActive']);
+    // Update warehouse
+    Route::put('warehouses/{id}', [WarehouseContorller::class, 'updateWarehouse']);
+    // Delete a warehouse
+    Route::delete('/warehouses/{id}', [WarehouseContorller::class, 'deleteWarehouse']);
 });

@@ -25,6 +25,23 @@ class warehouse extends Model
         'area',
         'is_active',
         'warehouse_image',
-        'warehouse_type_id'
+        'warehouse_type_id',
+        'admin_id',
+        'description'
     ];
+
+    public function warehouseType()
+    {
+        return $this->belongsTo(warehouse_type::class, 'warehouse_type_id');
+    }
+
+    public function admin()
+    {
+        return $this->belongsTo(admin::class, 'admin_id');
+    }
+
+    public function adminActivities()
+    {
+        return $this->hasMany(adminactivity::class, 'retated_table_id');
+    }
 }
