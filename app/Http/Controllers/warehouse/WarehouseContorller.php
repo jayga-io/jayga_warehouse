@@ -88,15 +88,22 @@ class WarehouseContorller extends Controller
     public function showWarehouse()
     {
         try {
-            $warehouses = warehouse::with(['warehouseType', 'admin', 'adminActivities.admin'])->get();
+            // Fetch warehouses with their related data
+            $warehouses = warehouse::with([
+                'warehouseType',
+                'admin',
+                'adminActivities.admin' => function ($query) {
+                    $query->where('type', 'warehouse');
+                }
+            ])->get();
 
-            // Hide the admin password in the response
+            // Hide sensitive data
             $warehouses->each(function ($warehouse) {
                 if ($warehouse->admin) {
                     $warehouse->admin->makeHidden('password');
                 }
 
-                // Hide the admin password in each admin activity
+                // Hide admin password in each admin activity
                 $warehouse->adminActivities->each(function ($activity) {
                     if ($activity->admin) {
                         $activity->admin->makeHidden('password');
@@ -118,18 +125,34 @@ class WarehouseContorller extends Controller
         }
     }
 
+
     // show warehouse by id
     public function showWarehouseById($id)
     {
         try {
-            $warehouse = warehouse::with(['warehouseType', 'admin', 'adminActivities.admin'])->findOrFail($id);
+            // Find the warehouse by ID and include related data (grids, warehouse type, admin, admin activities)
+            $warehouse = warehouse::with([
+                'warehouseType',
+                'admin',
+                'adminActivities.admin' => function ($query) {
+                    $query->where('type', 'warehouse');
+                },
+                'grids' // Eager load related grids
+            ])->findOrFail($id);
 
-            // Hide the admin password in the response
+            // Hide sensitive fields for the warehouse's admin
             if ($warehouse->admin) {
                 $warehouse->admin->makeHidden('password');
             }
 
-            // Return the response
+            // Process admin activities and hide sensitive admin info
+            $warehouse->adminActivities->each(function ($activity) {
+                if ($activity->admin) {
+                    $activity->admin->makeHidden(['password', 'auth_token', 'fcm_token']);
+                }
+            });
+
+            // Return the response with the warehouse, admin activity data, and related grids
             return response()->json([
                 'message' => 'Warehouse retrieved successfully',
                 'warehouse' => $warehouse
@@ -166,7 +189,8 @@ class WarehouseContorller extends Controller
             adminactivity::create([
                 'retated_table_id' => $warehouse->id,
                 'admin_id' => Auth::id(),
-                'description' => "Changed is_active status from $previousStatus to {$warehouse->is_active} for warehouse ID {$warehouse->id}"
+                'description' => "Changed is_active status from $previousStatus to {$warehouse->is_active} for warehouse ID {$warehouse->id}",
+                'type' => 'warehouse'
             ]);
 
             // Return a success response
@@ -182,6 +206,7 @@ class WarehouseContorller extends Controller
             ], 500);
         }
     }
+
 
     // update warehouse
     public function updateWarehouse(Request $request, $id)
@@ -210,15 +235,22 @@ class WarehouseContorller extends Controller
             // Find the warehouse by ID
             $warehouse = warehouse::findOrFail($id);
 
+            // Handle the warehouse image upload if provided
+            if ($request->hasFile('warehouse_image')) {
+                $imagePath = $request->file('warehouse_image')->store('warehouse_images', 'public');
+                $validatedData['warehouse_image'] = $imagePath;
+            }
+
             // Update the warehouse details
             $warehouse->update($validatedData);
 
             // Save the update info in the adminactivities table
-            $adminActivity = new adminactivity();
-            $adminActivity->retated_table_id = $warehouse->id;
-            $adminActivity->admin_id = auth()->user()->id;
-            $adminActivity->description = 'Updated warehouse details';
-            $adminActivity->save();
+            adminactivity::create([
+                'retated_table_id' => $warehouse->id,
+                'admin_id' => auth()->user()->id,
+                'description' => 'Updated warehouse details',
+                'type' => 'warehouse'
+            ]);
 
             // Return success response
             return response()->json([
@@ -234,6 +266,7 @@ class WarehouseContorller extends Controller
         }
     }
 
+
     // Delete warehouse
     public function deleteWarehouse($id)
     {
@@ -241,14 +274,16 @@ class WarehouseContorller extends Controller
             // Find the warehouse by ID
             $warehouse = warehouse::findOrFail($id);
 
+            // Get the authenticated admin ID
             $adminId = auth()->id();
 
             // Save the deletion activity to the adminactivities table
-            $adminActivity = new adminactivity();
-            $adminActivity->retated_table_id = $warehouse->id;
-            $adminActivity->admin_id = $adminId;
-            $adminActivity->description = 'Deleted warehouse: ' . $warehouse->location;
-            $adminActivity->save();
+            adminactivity::create([
+                'retated_table_id' => $warehouse->id,
+                'admin_id' => $adminId,
+                'description' => 'Deleted warehouse: ' . $warehouse->location,
+                'type' => 'warehouse'
+            ]);
 
             // Delete the warehouse record
             $warehouse->delete();

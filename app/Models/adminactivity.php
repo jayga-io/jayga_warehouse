@@ -12,7 +12,8 @@ class adminactivity extends Model
     protected $fillable = [
         'retated_table_id',
         'description',
-        'admin_id'
+        'admin_id',
+        'type'
     ];
 
     public function admin()

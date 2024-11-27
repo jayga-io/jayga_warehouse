@@ -15,6 +15,7 @@ return new class extends Migration
             $table->id();
             $table->integer('retated_table_id');
             $table->integer('admin_id');
+            $table->string('type');
             $table->text('description');
             $table->timestamps();
         });

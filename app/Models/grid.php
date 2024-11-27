@@ -18,4 +18,13 @@ class grid extends Model
         'type',
         'is_occupied'
     ];
+
+    public function warehouse()
+    {
+        return $this->belongsTo(warehouse::class, 'warehouse_id');
+    }
+    public function adminActivities()
+    {
+        return $this->hasMany(adminactivity::class, 'retated_table_id');
+    }
 }

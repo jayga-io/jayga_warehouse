@@ -44,4 +44,9 @@ class warehouse extends Model
     {
         return $this->hasMany(adminactivity::class, 'retated_table_id');
     }
+
+    public function grids()
+    {
+        return $this->hasMany(grid::class, 'warehouse_id');
+    }
 }
