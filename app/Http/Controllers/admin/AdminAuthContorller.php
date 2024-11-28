@@ -38,14 +38,14 @@ class AdminAuthContorller extends Controller
             }
 
             // Create a new admin
-            $admin = Admin::create([
+            $admin = admin::create([
                 'name' => $request->name,
                 'email' => $request->email,
                 'password' => Hash::make($request->password),
                 'type' => $request->type,
                 'role' => $request->role,
-                'admin_image' => 'admin_images/' . $imageName, // Save the file path in the database
-                'status' => $request->status ?? '1', // Default status
+                'admin_image' => 'admin_images/' . $imageName,
+                'status' => $request->status ?? '1', 
             ]);
 
             // Return success response

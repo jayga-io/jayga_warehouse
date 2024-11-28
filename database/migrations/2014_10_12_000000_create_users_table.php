@@ -23,9 +23,9 @@ return new class extends Migration
             $table->string('is_suspended')->nullable();
             $table->string('fcm_token')->nullable();
             $table->string('auth_token')->nullable();
-            $table->string('profile_image');
-            $table->string('description');
-            $table->string('address');
+            $table->string('profile_image')->nullable();
+            $table->string('description')->nullable();
+            $table->string('address')->nullable();
             $table->string('latitude')->nullable();
             $table->string('longitude')->nullable();
             $table->timestamps();

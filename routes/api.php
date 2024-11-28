@@ -4,6 +4,8 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\admin\{AdminAuthContorller, AdminController};
 use App\Http\Controllers\warehouse\{WarehouseTypeContorller, WarehouseContorller};
 use App\Http\Controllers\grid\GridController;
+use App\Http\Controllers\user\UserController;
+use App\Http\Controllers\request\RequestController;
 
 // Admin Routes
 // Admin registration
@@ -71,4 +73,19 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::delete('/grids/{id}', [GridController::class, 'deleteGrid']);
     // Change grid status
     Route::patch('/grids/{id}/toggle-status', [GridController::class, 'toggleStatus']);
+});
+
+// User api routes
+// user register
+Route::post('/register/user', [UserController::class, 'register']);
+//user login
+Route::post('/login/user', [UserController::class, 'login']);
+Route::middleware('auth:sanctum')->group(function () {
+    // show login user info
+    Route::get('/user', [UserController::class, 'getUserInfo']);
+    // user logout
+    Route::post('/logout/user', [UserController::class, 'logout']);
+
+    // order requests
+    Route::post('/create-order-request/user', [RequestController::class, 'createRequrstOrder']);
 });
