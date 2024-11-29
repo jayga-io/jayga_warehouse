@@ -73,6 +73,12 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::delete('/grids/{id}', [GridController::class, 'deleteGrid']);
     // Change grid status
     Route::patch('/grids/{id}/toggle-status', [GridController::class, 'toggleStatus']);
+
+    // Request order routes
+    // show all request
+    Route::get('/admin/requests', [RequestController::class, 'getAllRequestsForAdmin']);
+    // show request by id
+    Route::get('/admin/requests/{id}', [RequestController::class, 'showRequestById']);
 });
 
 // User api routes
@@ -88,4 +94,8 @@ Route::middleware('auth:sanctum')->group(function () {
 
     // order requests
     Route::post('/create-order-request/user', [RequestController::class, 'createRequrstOrder']);
+    // show all requests for this login user
+    Route::get('/requests/user', [RequestController::class, 'getUserRequests']);
+    // show request by id
+    Route::get('/requests/user/{id}', [RequestController::class, 'getRequestById']);
 });

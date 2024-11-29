@@ -28,4 +28,9 @@ class User extends Authenticatable
         'latitude',
         'longitude',
     ];
+
+    public function requests()
+    {
+        return $this->hasMany(request::class, 'user_id');
+    }
 }

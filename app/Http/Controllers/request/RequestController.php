@@ -67,4 +67,107 @@ class RequestController extends Controller
             ], 500);
         }
     }
+
+    // show all request which created by login user
+    public function getUserRequests(Request $request)
+    {
+        try {
+            // Fetch the logged-in user's ID
+            $userId = $request->user()->id;
+
+            // Fetch all requests for the logged-in user with related warehouse and items
+            $userRequests = OrderRequest::with(['warehouse', 'items'])
+                ->where('user_id', $userId)
+                ->get();
+
+            // Return the data
+            return response()->json([
+                'message' => 'User requests fetched successfully',
+                'data' => $userRequests,
+            ], 200);
+        } catch (\Exception $e) {
+            return response()->json([
+                'error' => 'Something went wrong',
+                'message' => $e->getMessage(),
+            ], 500);
+        }
+    }
+
+    // shwo request by id
+    public function getRequestById(Request $request, $id)
+    {
+        try {
+            // Fetch the logged-in user's ID
+            $userId = $request->user()->id;
+
+            // Fetch the specific request for the logged-in user
+            $orderRequest = OrderRequest::with(['warehouse', 'items'])
+                ->where('user_id', $userId)
+                ->where('id', $id)
+                ->first();
+
+            // Check if the request exists
+            if (!$orderRequest) {
+                return response()->json([
+                    'error' => 'Request not found or unauthorized access',
+                ], 404);
+            }
+
+            // Return the data
+            return response()->json([
+                'message' => 'Request fetched successfully',
+                'data' => $orderRequest,
+            ], 200);
+        } catch (\Exception $e) {
+            return response()->json([
+                'error' => 'Something went wrong',
+                'message' => $e->getMessage(),
+            ], 500);
+        }
+    }
+
+    // show all requests order in admin dashboard
+    public function getAllRequestsForAdmin()
+    {
+        try {
+            // Fetch all request orders with warehouse and user details, along with items
+            $requests = OrderRequest::with(['warehouse', 'user', 'items'])->get();
+
+            return response()->json([
+                'message' => 'All requests fetched successfully',
+                'data' => $requests,
+            ], 200);
+        } catch (\Exception $e) {
+            return response()->json([
+                'error' => 'Something went wrong',
+                'message' => $e->getMessage(),
+            ], 500);
+        }
+    }
+
+    // shwo request order by id in admin dashboard
+    public function showRequestById($id)
+    {
+        try {
+            // Fetch the request by ID along with related data
+            $requestData = OrderRequest::with(['warehouse', 'user', 'items'])->find($id);
+
+            // Check if the request exists
+            if (!$requestData) {
+                return response()->json(['message' => 'Request not found'], 404);
+            }
+
+            // Return the request data
+            return response()->json([
+                'message' => 'Request fetched successfully',
+                'data' => $requestData
+            ], 200);
+        } catch (\Exception $e) {
+            // Handle any unexpected errors
+            return response()->json([
+                'message' => 'An error occurred while fetching the request',
+                'error' => $e->getMessage()
+            ], 500);
+        }
+    }
 }

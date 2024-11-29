@@ -13,4 +13,19 @@ class request extends Model
         'warehouse_id',
         'status'
     ];
+
+    public function warehouse()
+    {
+        return $this->belongsTo(warehouse::class, 'warehouse_id');
+    }
+
+    public function items()
+    {
+        return $this->hasMany(item::class, 'request_id');
+    }
+
+    public function user()
+    {
+        return $this->belongsTo(User::class, 'user_id');
+    }
 }
