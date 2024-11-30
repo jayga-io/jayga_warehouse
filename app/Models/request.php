@@ -11,7 +11,10 @@ class request extends Model
     protected $fillable = [
         'user_id',
         'warehouse_id',
-        'status'
+        'status',
+        'size',
+        'start_date',
+        'end_date'
     ];
 
     public function warehouse()

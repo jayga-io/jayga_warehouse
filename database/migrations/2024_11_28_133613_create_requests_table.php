@@ -16,6 +16,9 @@ return new class extends Migration
             $table->integer('user_id');
             $table->integer('warehouse_id');
             $table->integer('status');
+            $table->integer('size');
+            $table->string('start_date');
+            $table->string('end_date');
             $table->timestamps();
         });
     }

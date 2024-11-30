@@ -8,6 +8,7 @@ use App\Models\request as OrderRequest;
 use App\Models\item;
 use Illuminate\Support\Facades\Validator;
 
+
 class RequestController extends Controller
 {
     //create request order
@@ -17,10 +18,13 @@ class RequestController extends Controller
             // Validate the input
             $validator = Validator::make($request->all(), [
                 'warehouse_id' => 'required|integer|exists:warehouses,id',
+                'size' => 'required|integer|min:1',
+                'start_date' => 'required|date',
+                'end_date' => 'required|date|after_or_equal:start_date',
                 'items' => 'required|array',
                 'items.*.name' => 'required|string',
                 'items.*.type' => 'required|string',
-                'items.*.request_quatity' => 'required|integer',
+                'items.*.request_quatity' => 'required|integer|min:1',
             ]);
 
             if ($validator->fails()) {
@@ -34,7 +38,10 @@ class RequestController extends Controller
             $orderRequest = OrderRequest::create([
                 'user_id' => $request->user()->id,
                 'warehouse_id' => $request->warehouse_id,
-                'status' => 0,
+                'status' => 0, // Default status
+                'size' => $request->size,
+                'start_date' => $request->start_date,
+                'end_date' => $request->end_date,
             ]);
 
             // Create the items
@@ -53,7 +60,7 @@ class RequestController extends Controller
             }
 
             // Insert all items at once
-            item::insert($items);
+            Item::insert($items);
 
             return response()->json([
                 'message' => 'Order Request created successfully',
@@ -67,6 +74,7 @@ class RequestController extends Controller
             ], 500);
         }
     }
+
 
     // show all request which created by login user
     public function getUserRequests(Request $request)

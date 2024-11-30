@@ -50,6 +50,7 @@ class WarehouseTypeContorller extends Controller
             ], 500);
         }
     }
+
     // Show all warehouse types
     public function getAllWarehouseTypes()
     {

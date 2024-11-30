@@ -8,6 +8,7 @@ use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Auth;
 use App\Models\warehouse;
 use App\Models\adminactivity;
+use App\Models\grid;
 
 class WarehouseContorller extends Controller
 {
@@ -26,7 +27,7 @@ class WarehouseContorller extends Controller
                 'owner_name' => 'required|string|max:255',
                 'owner_phone' => 'required|string|max:15',
                 'owner_email' => 'required|email|unique:warehouses,owner_email',
-                'total_grids' => 'required|string|max:255',
+                'total_grids' => 'required|integer|min:1',
                 'grid_price_per_day' => 'required|string|max:255',
                 'district' => 'required|string|max:255',
                 'area' => 'required|string|max:255',
@@ -43,7 +44,7 @@ class WarehouseContorller extends Controller
             }
 
             // Create the warehouse
-            $warehouse = warehouse::create([
+            $warehouse = Warehouse::create([
                 'location' => $request->location,
                 'latitude' => $request->latitude,
                 'longitude' => $request->longitude,
@@ -64,10 +65,32 @@ class WarehouseContorller extends Controller
                 'is_active' => '1',
             ]);
 
+            // Auto-create grids
+            $grids = [];
+            $locationCode = strtoupper(substr($warehouse->location, 0, 3));
+            for ($i = 1; $i <= $request->total_grids; $i++) {
+                $grids[] = [
+                    'warehouse_id' => $warehouse->id,
+                    'grid_code' => $locationCode . $i,
+                    'size' => '0',
+                    'has_rack' => '0',
+                    'rack_multiplier' => '0',
+                    'type' => null,
+                    'status' => '1',
+                    'is_occupied' => '0',
+                    'created_at' => now(),
+                    'updated_at' => now(),
+                ];
+            }
+
+            // Bulk insert grids
+            grid::insert($grids);
+
             // Return success response
             return response()->json([
-                'message' => 'Warehouse created successfully',
+                'message' => 'Warehouse created successfully with grids.',
                 'warehouse' => $warehouse,
+                'grids' => $grids,
             ], 201);
         } catch (\Illuminate\Validation\ValidationException $e) {
             // Handle validation exceptions
@@ -83,6 +106,7 @@ class WarehouseContorller extends Controller
             ], 500);
         }
     }
+
 
     // show all warehouse
     public function showWarehouse()
