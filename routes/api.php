@@ -92,6 +92,9 @@ Route::middleware('auth:sanctum')->group(function () {
     // user logout
     Route::post('/logout/user', [UserController::class, 'logout']);
 
+    // show all warehouse
+    Route::get('/warehouses', [WarehouseContorller::class, 'showWarehouse']);
+
     // order requests
     Route::post('/create-order-request/user', [RequestController::class, 'createRequrstOrder']);
     // show all requests for this login user

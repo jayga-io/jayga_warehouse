@@ -21,7 +21,9 @@ class UserController extends Controller
                 'name' => 'required|string|max:255',
                 'email' => 'required|email|unique:users,email|max:255',
                 'phone' => 'required|string|max:20|unique:users,phone',
-                'password' => 'required|string|min:8'
+                'password' => 'nullable|string|min:8',
+                'company_name' => 'nullable|string|max:255',
+                'industry_type' => 'nullable|string|max:255',
             ]);
 
             if ($validator->fails()) {
@@ -31,13 +33,18 @@ class UserController extends Controller
                 ], 422);
             }
 
+            // If password is not provided, set it to the phone number
+            $password = $request->password ? $request->password : $request->phone;
+
             // Create the user
             $user = User::create([
                 'name' => $request->name,
                 'email' => $request->email,
                 'phone' => $request->phone,
-                'password' => Hash::make($request->password),
-                'status' => '1'
+                'password' => Hash::make($password),
+                'company_name' => $request->company_name,
+                'industry_type' => $request->industry_type,
+                'status' => '1',
             ]);
 
             // Generate an API token for the user (if applicable)
@@ -62,6 +69,7 @@ class UserController extends Controller
             ], 500);
         }
     }
+
 
     // user login
     public function login(Request $request)
