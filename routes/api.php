@@ -6,6 +6,7 @@ use App\Http\Controllers\warehouse\{WarehouseTypeContorller, WarehouseContorller
 use App\Http\Controllers\grid\GridController;
 use App\Http\Controllers\user\UserController;
 use App\Http\Controllers\request\RequestController;
+use App\Http\Controllers\order\OrderController;
 
 // Admin Routes
 // Admin registration
@@ -79,6 +80,10 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::get('/admin/requests', [RequestController::class, 'getAllRequestsForAdmin']);
     // show request by id
     Route::get('/admin/requests/{id}', [RequestController::class, 'showRequestById']);
+
+    // Order routes
+    // plase order
+    Route::post('/place-order', [OrderController::class, 'placeOrder']);
 });
 
 // User api routes
