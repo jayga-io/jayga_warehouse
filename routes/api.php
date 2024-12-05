@@ -99,5 +99,3 @@ Route::middleware('auth:sanctum')->group(function () {
     // show request by id
     Route::get('/requests/user/{id}', [RequestController::class, 'getRequestById']);
 });
-
-// nakib
