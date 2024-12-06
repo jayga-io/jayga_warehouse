@@ -17,6 +17,7 @@ class OrderController extends Controller
             // Validate the input
             $validator = Validator::make($request->all(), [
                 'request_id' => 'required|integer|exists:requests,id',
+                'payment' => 'required|string',
                 'grid_assignments' => 'required|array',
                 'grid_assignments.*.item_id' => 'required|integer|exists:items,id',
                 'grid_assignments.*.grid_id' => 'required|integer|exists:grids,id',
@@ -51,7 +52,7 @@ class OrderController extends Controller
             $orderList = DB::table('order_lists')->insertGetId([
                 'order_id' => $order,
                 'status' => 0,
-                'payment' => 'Pending',
+                'payment' => $request->payment,
                 'start_date' => $requestData->start_date,
                 'end_date' => $requestData->end_date,
                 'created_at' => now(),
