@@ -11,14 +11,13 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('requests', function (Blueprint $table) {
+        Schema::create('request_files', function (Blueprint $table) {
             $table->id();
-            $table->integer('user_id');
-            $table->integer('warehouse_type_id');
-            $table->integer('status');
-            $table->integer('size');
-            $table->string('start_date');
-            $table->string('end_date');
+            $table->integer('relatable_id');
+            $table->string('file');
+            $table->string('user_id')->nullable();
+            $table->string('admin_id')->nullable();
+            $table->string('type');
             $table->timestamps();
         });
     }
@@ -28,6 +27,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('requests');
+        Schema::dropIfExists('request_files');
     }
 };

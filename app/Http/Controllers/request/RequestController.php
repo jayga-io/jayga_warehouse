@@ -18,7 +18,7 @@ class RequestController extends Controller
         try {
             // Validate the input
             $validator = Validator::make($request->all(), [
-                'warehouse_id' => 'required|integer|exists:warehouses,id',
+                'warehouse_type_id' => 'required|integer',
                 'size' => 'required|integer|min:1',
                 'start_date' => 'required|date',
                 'end_date' => 'required|date|after_or_equal:start_date',
