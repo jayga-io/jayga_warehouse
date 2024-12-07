@@ -18,7 +18,7 @@ class RequestController extends Controller
         try {
             // Validate the input
             $validator = Validator::make($request->all(), [
-                'warehouse_type_id' => 'required|integer',
+                'warehouseType_id' => 'required|integer',
                 'size' => 'required|integer|min:1',
                 'start_date' => 'required|date',
                 'end_date' => 'required|date|after_or_equal:start_date',
@@ -39,7 +39,7 @@ class RequestController extends Controller
             // Create the request
             $orderRequest = OrderRequest::create([
                 'user_id' => $request->user()->id,
-                'warehouse_id' => $request->warehouse_id,
+                'warehouseType_id' => $request->warehouseType_id,
                 'status' => 0, // Default status
                 'size' => $request->size,
                 'start_date' => $request->start_date,
@@ -71,7 +71,7 @@ class RequestController extends Controller
             ], 201);
         } catch (\Exception $e) {
             // Log the exception details
-            LogHelper::logError('Something went wrong', $e->getMessage(), 'user request');
+            LogHelper::logError('Something went wrong', $e->getMessage(), 'user order request');
             return response()->json([
                 'error' => 'Something went wrong',
                 'message' => $e->getMessage(),
