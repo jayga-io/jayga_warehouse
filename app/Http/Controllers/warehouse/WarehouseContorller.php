@@ -9,6 +9,7 @@ use Illuminate\Support\Facades\Auth;
 use App\Models\warehouse;
 use App\Models\adminactivity;
 use App\Models\grid;
+use App\Helpers\LogHelper;
 
 class WarehouseContorller extends Controller
 {
@@ -93,12 +94,16 @@ class WarehouseContorller extends Controller
                 'grids' => $grids,
             ], 201);
         } catch (\Illuminate\Validation\ValidationException $e) {
+            // Log the exception details
+            LogHelper::logError('Something went wrong', $e->getMessage(), 'warehouse create');
             // Handle validation exceptions
             return response()->json([
                 'error' => 'Validation error',
                 'message' => $e->errors(),
             ], 422);
         } catch (\Exception $e) {
+            // Log the exception details
+            LogHelper::logError('Something went wrong', $e->getMessage(), 'warehouse create');
             // Handle other exceptions
             return response()->json([
                 'error' => 'Something went wrong',
@@ -223,6 +228,8 @@ class WarehouseContorller extends Controller
                 'warehouse' => $warehouse
             ], 200);
         } catch (\Exception $e) {
+            // Log the exception details
+            LogHelper::logError('Something went wrong', $e->getMessage(), 'warehouse status change');
             // Handle general exceptions
             return response()->json([
                 'error' => 'Something went wrong',
@@ -282,6 +289,8 @@ class WarehouseContorller extends Controller
                 'warehouse' => $warehouse
             ], 200);
         } catch (\Exception $e) {
+            // Log the exception details
+            LogHelper::logError('Something went wrong', $e->getMessage(), 'warehouse update');
             // Handle exceptions
             return response()->json([
                 'error' => 'Something went wrong',
@@ -323,6 +332,8 @@ class WarehouseContorller extends Controller
                 'message' => $e->getMessage()
             ], 404);
         } catch (\Exception $e) {
+            // Log the exception details
+            LogHelper::logError('Something went wrong', $e->getMessage(), 'warehouse delete');
             // Handle general exceptions
             return response()->json([
                 'error' => 'Something went wrong',

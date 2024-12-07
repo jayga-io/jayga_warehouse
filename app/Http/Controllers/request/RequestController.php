@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use App\Models\request as OrderRequest;
 use App\Models\item;
 use Illuminate\Support\Facades\Validator;
+use App\Helpers\LogHelper;
 
 
 class RequestController extends Controller
@@ -28,6 +29,7 @@ class RequestController extends Controller
             ]);
 
             if ($validator->fails()) {
+                LogHelper::logError('Validation failed', $validator->errors(), 'user order request');
                 return response()->json([
                     'error' => 'Validation failed',
                     'messages' => $validator->errors(),
@@ -68,6 +70,8 @@ class RequestController extends Controller
                 'items' => $items,
             ], 201);
         } catch (\Exception $e) {
+            // Log the exception details
+            LogHelper::logError('Something went wrong', $e->getMessage(), 'user request');
             return response()->json([
                 'error' => 'Something went wrong',
                 'message' => $e->getMessage(),

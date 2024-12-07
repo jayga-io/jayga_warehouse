@@ -8,6 +8,7 @@ use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
 use App\Models\User;
 use Illuminate\Support\Facades\Auth;
+use App\Helpers\LogHelper;
 
 
 class UserController extends Controller
@@ -27,6 +28,7 @@ class UserController extends Controller
             ]);
 
             if ($validator->fails()) {
+                LogHelper::logError('Validation failed', $validator->errors(), 'user register');
                 return response()->json([
                     'error' => 'Validation failed',
                     'messages' => $validator->errors(),
@@ -62,6 +64,9 @@ class UserController extends Controller
                 'message' => $e->getMessage(),
             ], 500);
         } catch (\Exception $e) {
+            // Log the exception details
+            LogHelper::logError('Something went wrong', $e->getMessage(), 'user register');
+
             // Handle general exceptions
             return response()->json([
                 'error' => 'Something went wrong',
@@ -82,6 +87,7 @@ class UserController extends Controller
             ]);
 
             if ($validator->fails()) {
+                LogHelper::logError('Validation failed', $validator->errors(), 'user login');
                 return response()->json([
                     'error' => 'Validation failed',
                     'messages' => $validator->errors(),
@@ -92,6 +98,7 @@ class UserController extends Controller
             $user = User::where('email', $request->email)->first();
 
             if (!$user || !Hash::check($request->password, $user->password)) {
+                LogHelper::logError('Invalid credentials', 'The provided email or password is incorrect.', 'user login');
                 return response()->json([
                     'error' => 'Invalid credentials',
                     'message' => 'The provided email or password is incorrect.',
@@ -107,6 +114,9 @@ class UserController extends Controller
                 'token' => $token,
             ], 200);
         } catch (\Exception $e) {
+            // Log the exception details
+            LogHelper::logError('Something went wrong', $e->getMessage(), 'user login');
+
             // Handle general exceptions
             return response()->json([
                 'error' => 'Something went wrong',

@@ -6,8 +6,8 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use App\Models\warehouse_type;
-use App\Models\admin;
 use App\Models\updatewarehousetype;
+use App\Helpers\LogHelper;
 
 class WarehouseTypeContorller extends Controller
 {
@@ -43,6 +43,8 @@ class WarehouseTypeContorller extends Controller
                 'message' => $e->errors(),
             ], 422);
         } catch (\Exception $e) {
+            // Log the exception details
+            LogHelper::logError('Something went wrong', $e->getMessage(), 'warehouse type create');
             // Handle general errors
             return response()->json([
                 'error' => 'Something went wrong',
@@ -148,6 +150,8 @@ class WarehouseTypeContorller extends Controller
                 'warehouse_type' => $warehouseType,
             ], 200);
         } catch (\Exception $e) {
+            // Log the exception details
+            LogHelper::logError('Something went wrong', $e->getMessage(), 'warehouse type update');
             // Handle any errors that occur
             return response()->json([
                 'error' => 'Something went wrong',
@@ -181,6 +185,8 @@ class WarehouseTypeContorller extends Controller
                 'message' => 'Warehouse type and its related records deleted successfully',
             ], 200);
         } catch (\Exception $e) {
+            // Log the exception details
+            LogHelper::logError('Something went wrong', $e->getMessage(), 'warehouse type delete');
             // Handle any errors that occur
             return response()->json([
                 'error' => 'Something went wrong',

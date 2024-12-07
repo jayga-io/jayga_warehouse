@@ -9,6 +9,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Validation\ValidationException;
 use App\Models\admin;
 use Illuminate\Support\Facades\Log;
+use App\Helpers\LogHelper;
 
 class AdminAuthContorller extends Controller
 {
@@ -45,7 +46,7 @@ class AdminAuthContorller extends Controller
                 'type' => $request->type,
                 'role' => $request->role,
                 'admin_image' => 'admin_images/' . $imageName,
-                'status' => $request->status ?? '1', 
+                'status' => $request->status ?? '1',
             ]);
 
             // Return success response
@@ -54,6 +55,7 @@ class AdminAuthContorller extends Controller
                 'admin' => $admin,
             ], 201);
         } catch (\Illuminate\Validation\ValidationException $e) {
+
             // Handle validation exceptions
             Log::error('Validation error during admin registration: ' . $e->getMessage());
             return response()->json([
@@ -61,6 +63,8 @@ class AdminAuthContorller extends Controller
                 'message' => $e->getMessage()
             ], 422);
         } catch (\Illuminate\Database\QueryException $e) {
+            // Log the exception details
+            LogHelper::logError('Something went wrong', $e->getMessage(), 'admin register');
             // Handle database-related exceptions
             Log::error('Database error during admin registration: ' . $e->getMessage());
             return response()->json([
@@ -68,6 +72,8 @@ class AdminAuthContorller extends Controller
                 'message' => 'An error occurred while saving the admin details. Please try again.'
             ], 500);
         } catch (\Exception $e) {
+            // Log the exception details
+            LogHelper::logError('Something went wrong', $e->getMessage(), 'admin register');
             // Handle any other general exceptions
             Log::error('General error during admin registration: ' . $e->getMessage());
             return response()->json([
@@ -126,6 +132,8 @@ class AdminAuthContorller extends Controller
                 'admin' => $admin,
             ], 200);
         } catch (\Exception $e) {
+            // Log the exception details
+            LogHelper::logError('Something went wrong', $e->getMessage(), 'admin login');
             // Return a response with error message
             return response()->json([
                 'error' => 'Something went wrong. Please try again.',
@@ -200,6 +208,8 @@ class AdminAuthContorller extends Controller
                 'admin' => $admin,
             ], 200);
         } catch (\Illuminate\Validation\ValidationException $e) {
+            // Log the exception details
+            LogHelper::logError('Something went wrong', $e->getMessage(), 'admin update');
             // Handle validation exceptions
             Log::error('Validation error during profile update: ' . $e->getMessage());
             return response()->json([
@@ -207,6 +217,8 @@ class AdminAuthContorller extends Controller
                 'message' => $e->getMessage()
             ], 422);
         } catch (\Exception $e) {
+            // Log the exception details
+            LogHelper::logError('Something went wrong', $e->getMessage(), 'admin profile update');
             // Handle any other general exceptions
             Log::error('Error during profile update: ' . $e->getMessage());
             return response()->json([
@@ -246,11 +258,15 @@ class AdminAuthContorller extends Controller
                 'message' => 'Password updated successfully.',
             ], 200);
         } catch (ValidationException $e) {
+            // Log the exception details
+            LogHelper::logError('Something went wrong', $e->getMessage(), 'admin password changed');
             return response()->json([
                 'error' => 'Validation error',
                 'message' => $e->errors(),
             ], 422);
         } catch (\Exception $e) {
+            // Log the exception details
+            LogHelper::logError('Something went wrong', $e->getMessage(), 'admin password changed');
             return response()->json([
                 'error' => 'Something went wrong',
                 'message' => $e->getMessage(),

@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use App\Models\grid;
 use App\Models\adminactivity;
 use Illuminate\Support\Facades\Auth;
+use App\Helpers\LogHelper;
 
 class GridController extends Controller
 {
@@ -42,6 +43,8 @@ class GridController extends Controller
                 'grid' => $grid,
             ], 201);
         } catch (\Exception $e) {
+            // Log the exception details
+            LogHelper::logError('Something went wrong', $e->getMessage(), 'grid create');
             // Handle exceptions
             return response()->json([
                 'error' => 'Failed to create grid.',
@@ -144,12 +147,16 @@ class GridController extends Controller
                 'grid' => $grid
             ], 200);
         } catch (\Illuminate\Database\Eloquent\ModelNotFoundException $e) {
+            // Log the exception details
+            LogHelper::logError('Something went wrong', $e->getMessage(),'grid update');
             // Handle case where the grid is not found
             return response()->json([
                 'error' => 'Grid not found',
                 'message' => $e->getMessage()
             ], 404);
         } catch (\Exception $e) {
+            // Log the exception details
+            LogHelper::logError('Something went wrong', $e->getMessage(), 'grid update');
             // Handle general exceptions
             return response()->json([
                 'error' => 'Something went wrong',
@@ -190,6 +197,8 @@ class GridController extends Controller
                 'message' => $e->getMessage()
             ], 404);
         } catch (\Exception $e) {
+            // Log the exception details
+            LogHelper::logError('Something went wrong', $e->getMessage(), 'grid delete');
             // Handle general exceptions
             return response()->json([
                 'error' => 'Something went wrong',
@@ -232,6 +241,8 @@ class GridController extends Controller
                 'message' => $e->getMessage()
             ], 404);
         } catch (\Exception $e) {
+            // Log the exception details
+            LogHelper::logError('Something went wrong', $e->getMessage(), 'grid status changed');
             // Handle general exceptions
             return response()->json([
                 'error' => 'Something went wrong',

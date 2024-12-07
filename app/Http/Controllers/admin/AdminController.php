@@ -4,11 +4,9 @@ namespace App\Http\Controllers\admin;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Validation\ValidationException;
 use App\Models\admin;
-use Illuminate\Support\Facades\Log;
+use App\Helpers\LogHelper;
 
 class AdminController extends Controller
 {
@@ -131,6 +129,8 @@ class AdminController extends Controller
                 'message' => $e->errors(),
             ], 422);
         } catch (\Exception $e) {
+            // Log the exception details
+            LogHelper::logError('Something went wrong', $e->getMessage(), 'update admin');
             // Handle general errors
             return response()->json([
                 'error' => 'Something went wrong',
@@ -162,6 +162,8 @@ class AdminController extends Controller
                 'admin' => $admin,
             ], 200);
         } catch (\Exception $e) {
+            // Log the exception details
+            LogHelper::logError('Something went wrong', $e->getMessage(), 'update admin status');
             // Handle any errors
             return response()->json([
                 'error' => 'Something went wrong',
@@ -192,6 +194,8 @@ class AdminController extends Controller
                 'message' => 'Admin deleted successfully',
             ], 200);
         } catch (\Exception $e) {
+            // Log the exception details
+            LogHelper::logError('Something went wrong', $e->getMessage(), 'delete admin');
             // Handle any errors
             return response()->json([
                 'error' => 'Something went wrong',
