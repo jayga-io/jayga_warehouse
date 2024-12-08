@@ -71,7 +71,11 @@ class RequestController extends Controller
             ], 201);
         } catch (\Exception $e) {
             // Log the exception details
+<<<<<<< HEAD
             LogHelper::logError('Something went wrong', $e->getMessage(), 'user register');
+=======
+            LogHelper::logError('Something went wrong', $e->getMessage(), 'user order request');
+>>>>>>> 015b63daf8ff6f36aceb02db4d7ff2d0e53b1dc5
             return response()->json([
                 'error' => 'Something went wrong',
                 'message' => $e->getMessage(),
