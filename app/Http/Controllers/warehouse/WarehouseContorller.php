@@ -214,13 +214,13 @@ class WarehouseContorller extends Controller
             $warehouse->is_active = $warehouse->is_active == '1' ? '0' : '1';
             $warehouse->save();
 
-            // Save the activity in the adminactivities table
-            adminactivity::create([
-                'retated_table_id' => $warehouse->id,
-                'admin_id' => Auth::id(),
-                'description' => "Changed is_active status from $previousStatus to {$warehouse->is_active} for warehouse ID {$warehouse->id}",
-                'type' => 'warehouse'
-            ]);
+            // Use the helper function to log the activity
+            logAdminActivity(
+                $warehouse->id,
+                Auth::id(),
+                "Changed is_active status from $previousStatus to {$warehouse->is_active} for warehouse ID {$warehouse->id}",
+                'warehouse'
+            );
 
             // Return a success response
             return response()->json([
@@ -237,7 +237,6 @@ class WarehouseContorller extends Controller
             ], 500);
         }
     }
-
 
     // update warehouse
     public function updateWarehouse(Request $request, $id)
@@ -275,13 +274,13 @@ class WarehouseContorller extends Controller
             // Update the warehouse details
             $warehouse->update($validatedData);
 
-            // Save the update info in the adminactivities table
-            adminactivity::create([
-                'retated_table_id' => $warehouse->id,
-                'admin_id' => auth()->user()->id,
-                'description' => 'Updated warehouse details',
-                'type' => 'warehouse'
-            ]);
+            // Log the update activity using the helper
+            logAdminActivity(
+                $warehouse->id,
+                auth()->user()->id,
+                'Updated warehouse details',
+                'warehouse'
+            );
 
             // Return success response
             return response()->json([
@@ -292,49 +291,6 @@ class WarehouseContorller extends Controller
             // Log the exception details
             LogHelper::logError('Something went wrong', $e->getMessage(), 'warehouse update');
             // Handle exceptions
-            return response()->json([
-                'error' => 'Something went wrong',
-                'message' => $e->getMessage()
-            ], 500);
-        }
-    }
-
-
-    // Delete warehouse
-    public function deleteWarehouse($id)
-    {
-        try {
-            // Find the warehouse by ID
-            $warehouse = warehouse::findOrFail($id);
-
-            // Get the authenticated admin ID
-            $adminId = auth()->id();
-
-            // Save the deletion activity to the adminactivities table
-            adminactivity::create([
-                'retated_table_id' => $warehouse->id,
-                'admin_id' => $adminId,
-                'description' => 'Deleted warehouse: ' . $warehouse->location,
-                'type' => 'warehouse'
-            ]);
-
-            // Delete the warehouse record
-            $warehouse->delete();
-
-            // Return success response
-            return response()->json([
-                'message' => 'Warehouse deleted successfully and activity logged.'
-            ], 200);
-        } catch (\Illuminate\Database\Eloquent\ModelNotFoundException $e) {
-            // Handle case where the warehouse is not found
-            return response()->json([
-                'error' => 'Warehouse not found',
-                'message' => $e->getMessage()
-            ], 404);
-        } catch (\Exception $e) {
-            // Log the exception details
-            LogHelper::logError('Something went wrong', $e->getMessage(), 'warehouse delete');
-            // Handle general exceptions
             return response()->json([
                 'error' => 'Something went wrong',
                 'message' => $e->getMessage()

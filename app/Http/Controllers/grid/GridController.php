@@ -130,16 +130,13 @@ class GridController extends Controller
             // Update the grid with validated data
             $grid->update($validatedData);
 
-            // Get the logged-in admin ID
-            $adminId = Auth::id();
-
-            // Store the activity in the admin_activity table
-            adminactivity::create([
-                'retated_table_id' => $grid->id,
-                'description' => 'Grid updated',
-                'admin_id' => $adminId,
-                'type' => 'grid'
-            ]);
+            // Log the activity using the helper
+            logAdminActivity(
+                $grid->id,
+                Auth::id(),
+                'Grid updated',
+                'grid'
+            );
 
             // Return a success response
             return response()->json([
@@ -148,7 +145,7 @@ class GridController extends Controller
             ], 200);
         } catch (\Illuminate\Database\Eloquent\ModelNotFoundException $e) {
             // Log the exception details
-            LogHelper::logError('Something went wrong', $e->getMessage(),'grid update');
+            LogHelper::logError('Something went wrong', $e->getMessage(), 'grid update');
             // Handle case where the grid is not found
             return response()->json([
                 'error' => 'Grid not found',
@@ -172,16 +169,13 @@ class GridController extends Controller
             // Find the grid by ID
             $grid = grid::findOrFail($id);
 
-            // Get the logged-in admin ID
-            $adminId = Auth::id();
-
-            // Store the activity in the admin_activity table (before deletion)
-            adminactivity::create([
-                'retated_table_id' => $grid->id,
-                'description' => 'Grid deleted',
-                'admin_id' => $adminId,
-                'type' => 'grid'
-            ]);
+            // Log the activity using the helper (before deletion)
+            logAdminActivity(
+                $grid->id,
+                Auth::id(),
+                'Grid deleted',
+                'grid'
+            );
 
             // Delete the grid
             $grid->delete();
@@ -207,6 +201,7 @@ class GridController extends Controller
         }
     }
 
+
     // Change grid status
     public function toggleStatus($id)
     {
@@ -218,16 +213,13 @@ class GridController extends Controller
             $grid->status = $grid->status == 1 ? 0 : 1;
             $grid->save();
 
-            // Get the logged-in admin ID
-            $adminId = Auth::id();
-
-            // Store the activity in the admin_activity table (before status change)
-            adminactivity::create([
-                'retated_table_id' => $grid->id,
-                'description' => 'Grid status updated',
-                'admin_id' => $adminId,
-                'type' => 'grid'
-            ]);
+            // Log the activity using the helper
+            logAdminActivity(
+                $grid->id,
+                Auth::id(),
+                'Grid status updated',
+                'grid'
+            );
 
             // Return a success response
             return response()->json([
