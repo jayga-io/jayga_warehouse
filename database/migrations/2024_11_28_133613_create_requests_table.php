@@ -14,7 +14,7 @@ return new class extends Migration
         Schema::create('requests', function (Blueprint $table) {
             $table->id();
             $table->integer('user_id');
-            $table->integer('warehouse_type_id');
+            $table->integer('warehouseType_id');
             $table->integer('status');
             $table->integer('size');
             $table->string('start_date');

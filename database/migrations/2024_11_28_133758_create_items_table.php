@@ -16,6 +16,7 @@ return new class extends Migration
             $table->integer('request_id');
             $table->string('name');
             $table->string('type');
+            $table->integer('user_id');
             $table->integer('request_quatity');
             $table->integer('recived_quatity');
             $table->timestamps();
