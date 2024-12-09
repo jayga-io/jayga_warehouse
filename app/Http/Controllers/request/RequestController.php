@@ -113,8 +113,8 @@ class RequestController extends Controller
             // Fetch the logged-in user's ID
             $userId = $request->user()->id;
 
-            // Fetch the specific request for the logged-in user
-            $orderRequest = OrderRequest::with(['warehouse', 'items'])
+            // Fetch the specific request for the logged-in user, including warehouseType
+            $orderRequest = OrderRequest::with(['warehouseType', 'items'])
                 ->where('user_id', $userId)
                 ->where('id', $id)
                 ->first();
@@ -178,23 +178,35 @@ class RequestController extends Controller
     {
         try {
             // Fetch the request by ID along with related data
-            $requestData = OrderRequest::with(['warehouse', 'user', 'items'])->find($id);
+            $requestData = OrderRequest::with(['warehouseType', 'user', 'items'])
+                ->find($id);
 
             // Check if the request exists
             if (!$requestData) {
                 return response()->json(['message' => 'Request not found'], 404);
             }
 
-            // Return the request data
+            // Fetch related files from RequestFile where type is 'order_request'
+            $relatedFiles = RequestFile::where('relatable_id', $id)
+                ->where('type', 'order_request')
+                ->get();
+
+            // Combine the request data with related files
+            $data = [
+                'order_request' => $requestData,
+                'related_files' => $relatedFiles,
+            ];
+
+            // Return the combined data
             return response()->json([
                 'message' => 'Request fetched successfully',
-                'data' => $requestData
+                'data' => $data,
             ], 200);
         } catch (\Exception $e) {
             // Handle any unexpected errors
             return response()->json([
                 'message' => 'An error occurred while fetching the request',
-                'error' => $e->getMessage()
+                'error' => $e->getMessage(),
             ], 500);
         }
     }

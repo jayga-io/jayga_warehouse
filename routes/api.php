@@ -80,7 +80,7 @@ Route::middleware('auth:sanctum')->group(function () {
     // show all request
     Route::get('/admin/requests', [RequestController::class, 'getAllRequestsForAdmin']);
     // Request file upload admin
-    Route::post('/admin/request-files', [RequestFileController::class, 'uploadRequestFilesadmin']);
+    Route::post('/request-files/user', [RequestFileController::class, 'uploadRequestFiles']);
     // show request by id
     Route::get('/admin/requests/{id}', [RequestController::class, 'showRequestById']);
 
