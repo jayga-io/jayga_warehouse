@@ -79,6 +79,8 @@ Route::middleware('auth:sanctum')->group(function () {
     // Request order routes
     // show all request
     Route::get('/admin/requests', [RequestController::class, 'getAllRequestsForAdmin']);
+    // Request file upload admin
+    Route::post('/admin/request-files', [RequestFileController::class, 'uploadRequestFilesadmin']);
     // show request by id
     Route::get('/admin/requests/{id}', [RequestController::class, 'showRequestById']);
 

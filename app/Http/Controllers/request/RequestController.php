@@ -6,8 +6,10 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\request as OrderRequest;
 use App\Models\item;
+use App\Models\RequestFile;
 use Illuminate\Support\Facades\Validator;
 use App\Helpers\LogHelper;
+use Illuminate\Support\Facades\Log;
 
 
 class RequestController extends Controller
@@ -124,18 +126,33 @@ class RequestController extends Controller
                 ], 404);
             }
 
+            // Fetch related files from RequestFile where type is 'order_request'
+            $requestFiles = RequestFile::where('relatable_id', $id)
+                ->where('type', 'order_request')
+                ->get();
+
+            // Combine data from OrderRequest and related files
+            $data = [
+                'order_request' => $orderRequest,
+                'related_files' => $requestFiles,
+            ];
+
             // Return the data
             return response()->json([
                 'message' => 'Request fetched successfully',
-                'data' => $orderRequest,
+                'data' => $data,
             ], 200);
         } catch (\Exception $e) {
+            // Handle exceptions and log the error
+            Log::error('Error fetching request by ID: ' . $e->getMessage());
+
             return response()->json([
                 'error' => 'Something went wrong',
                 'message' => $e->getMessage(),
             ], 500);
         }
     }
+
 
     // show all requests order in admin dashboard
     public function getAllRequestsForAdmin()
