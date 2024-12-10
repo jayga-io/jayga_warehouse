@@ -7,6 +7,7 @@ use App\Http\Controllers\grid\GridController;
 use App\Http\Controllers\user\UserController;
 use App\Http\Controllers\request\RequestController;
 use App\Http\Controllers\order\OrderController;
+use App\Http\Controllers\RequestFile\RequestFileController;
 
 // Admin Routes
 // Admin registration
@@ -78,8 +79,12 @@ Route::middleware('auth:sanctum')->group(function () {
     // Request order routes
     // show all request
     Route::get('/admin/requests', [RequestController::class, 'getAllRequestsForAdmin']);
+    // Request file upload admin
+    Route::post('/request-files/admin', [RequestFileController::class, 'uploadRequestFilesadmin']);
     // show request by id
     Route::get('/admin/requests/{id}', [RequestController::class, 'showRequestById']);
+    // Request status change
+    Route::post('/requests/{id}/status', [RequestController::class, 'updateStatus']);
 
     // Order routes
     // plase order
@@ -102,6 +107,8 @@ Route::middleware('auth:sanctum')->group(function () {
 
     // order requests
     Route::post('/create-order-request/user', [RequestController::class, 'createRequrstOrder']);
+    // Request file upload
+    Route::post('/request-files/user', [RequestFileController::class, 'uploadRequestFiles']);
     // show all requests for this login user
     Route::get('/requests/user', [RequestController::class, 'getUserRequests']);
     // show request by id

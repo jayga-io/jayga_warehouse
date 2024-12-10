@@ -17,6 +17,11 @@ class request extends Model
         'end_date'
     ];
 
+    public function warehouseType()
+    {
+        return $this->belongsTo(warehouse_type::class, 'warehouseType_id');
+    }
+
     public function warehouse()
     {
         return $this->belongsTo(warehouse::class, 'warehouse_id');

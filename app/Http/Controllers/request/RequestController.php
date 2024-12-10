@@ -6,8 +6,11 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\request as OrderRequest;
 use App\Models\item;
+use App\Models\RequestFile;
 use Illuminate\Support\Facades\Validator;
 use App\Helpers\LogHelper;
+use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Auth;
 
 
 class RequestController extends Controller
@@ -111,8 +114,8 @@ class RequestController extends Controller
             // Fetch the logged-in user's ID
             $userId = $request->user()->id;
 
-            // Fetch the specific request for the logged-in user
-            $orderRequest = OrderRequest::with(['warehouse', 'items'])
+            // Fetch the specific request for the logged-in user, including warehouseType
+            $orderRequest = OrderRequest::with(['warehouseType', 'items'])
                 ->where('user_id', $userId)
                 ->where('id', $id)
                 ->first();
@@ -124,18 +127,33 @@ class RequestController extends Controller
                 ], 404);
             }
 
+            // Fetch related files from RequestFile where type is 'order_request'
+            $requestFiles = RequestFile::where('relatable_id', $id)
+                ->where('type', 'order_request')
+                ->get();
+
+            // Combine data from OrderRequest and related files
+            $data = [
+                'order_request' => $orderRequest,
+                'related_files' => $requestFiles,
+            ];
+
             // Return the data
             return response()->json([
                 'message' => 'Request fetched successfully',
-                'data' => $orderRequest,
+                'data' => $data,
             ], 200);
         } catch (\Exception $e) {
+            // Handle exceptions and log the error
+            Log::error('Error fetching request by ID: ' . $e->getMessage());
+
             return response()->json([
                 'error' => 'Something went wrong',
                 'message' => $e->getMessage(),
             ], 500);
         }
     }
+
 
     // show all requests order in admin dashboard
     public function getAllRequestsForAdmin()
@@ -161,24 +179,83 @@ class RequestController extends Controller
     {
         try {
             // Fetch the request by ID along with related data
-            $requestData = OrderRequest::with(['warehouse', 'user', 'items'])->find($id);
+            $requestData = OrderRequest::with(['warehouseType', 'user', 'items'])
+                ->find($id);
 
             // Check if the request exists
             if (!$requestData) {
                 return response()->json(['message' => 'Request not found'], 404);
             }
 
-            // Return the request data
+            // Fetch related files from RequestFile where type is 'order_request'
+            $relatedFiles = RequestFile::where('relatable_id', $id)
+                ->where('type', 'order_request')
+                ->get();
+
+            // Combine the request data with related files
+            $data = [
+                'order_request' => $requestData,
+                'related_files' => $relatedFiles,
+            ];
+
+            // Return the combined data
             return response()->json([
                 'message' => 'Request fetched successfully',
-                'data' => $requestData
+                'data' => $data,
             ], 200);
         } catch (\Exception $e) {
             // Handle any unexpected errors
             return response()->json([
                 'message' => 'An error occurred while fetching the request',
-                'error' => $e->getMessage()
+                'error' => $e->getMessage(),
             ], 500);
+        }
+    }
+
+    // update request order by id in admin dashboard
+    public function updateStatus(Request $request, $id)
+    {
+        try {
+            // Validate the request input
+            $validatedData = $request->validate([
+                'status' => 'required|integer|in:0,1,2,3',
+            ]);
+
+            // Find the order request by ID
+            $orderRequest = OrderRequest::find($id);
+
+            // If the order request is not found, return a 404 response
+            if (!$orderRequest) {
+                return response()->json(['message' => 'Request not found'], 404);
+            }
+
+            // Capture the current status before updating
+            $currentStatus = $orderRequest->status;
+
+            // Update the status
+            $orderRequest->status = $validatedData['status'];
+            $orderRequest->save();
+
+            // Log the activity using the helper
+            logAdminActivity(
+                $id,
+                Auth::id(),
+                "Updating order request status from '{$currentStatus}' to '{$validatedData['status']}'",
+                'request'
+            );
+
+            // Return success response
+            return response()->json(['message' => 'Status updated successfully'], 200);
+        } catch (\Illuminate\Validation\ValidationException $e) {
+            // Log the exception details
+            LogHelper::logError('Something went wrong', $e->getMessage(), 'request status changed by admin');
+            // Handle validation exceptions
+            return response()->json(['message' => 'Validation failed', 'errors' => $e->errors()], 422);
+        } catch (\Exception $e) {
+            // Log the exception details
+            LogHelper::logError('Something went wrong', $e->getMessage(), 'request status changed by admin');
+            // Handle other exceptions
+            return response()->json(['message' => 'An error occurred', 'error' => $e->getMessage()], 500);
         }
     }
 }
