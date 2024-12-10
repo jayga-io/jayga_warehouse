@@ -10,6 +10,7 @@ use App\Models\RequestFile;
 use Illuminate\Support\Facades\Validator;
 use App\Helpers\LogHelper;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Auth;
 
 
 class RequestController extends Controller
@@ -208,6 +209,53 @@ class RequestController extends Controller
                 'message' => 'An error occurred while fetching the request',
                 'error' => $e->getMessage(),
             ], 500);
+        }
+    }
+
+    // update request order by id in admin dashboard
+    public function updateStatus(Request $request, $id)
+    {
+        try {
+            // Validate the request input
+            $validatedData = $request->validate([
+                'status' => 'required|integer|in:0,1,2,3',
+            ]);
+
+            // Find the order request by ID
+            $orderRequest = OrderRequest::find($id);
+
+            // If the order request is not found, return a 404 response
+            if (!$orderRequest) {
+                return response()->json(['message' => 'Request not found'], 404);
+            }
+
+            // Capture the current status before updating
+            $currentStatus = $orderRequest->status;
+
+            // Update the status
+            $orderRequest->status = $validatedData['status'];
+            $orderRequest->save();
+
+            // Log the activity using the helper
+            logAdminActivity(
+                $id,
+                Auth::id(),
+                "Updating order request status from '{$currentStatus}' to '{$validatedData['status']}'",
+                'request'
+            );
+
+            // Return success response
+            return response()->json(['message' => 'Status updated successfully'], 200);
+        } catch (\Illuminate\Validation\ValidationException $e) {
+            // Log the exception details
+            LogHelper::logError('Something went wrong', $e->getMessage(), 'request status changed by admin');
+            // Handle validation exceptions
+            return response()->json(['message' => 'Validation failed', 'errors' => $e->errors()], 422);
+        } catch (\Exception $e) {
+            // Log the exception details
+            LogHelper::logError('Something went wrong', $e->getMessage(), 'request status changed by admin');
+            // Handle other exceptions
+            return response()->json(['message' => 'An error occurred', 'error' => $e->getMessage()], 500);
         }
     }
 }
