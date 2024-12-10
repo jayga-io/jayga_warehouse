@@ -18,34 +18,34 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::post('/admin/logout', [AdminAuthContorller::class, 'logout']);
 
     // show login admin information
-    Route::get('admin/info', [AdminController::class, 'showAdminInfo']);
+    Route::get('/admin/info', [AdminController::class, 'showAdminInfo']);
     // Update login admin information
     Route::put('/admin/update-profile', [AdminAuthContorller::class, 'updateProfile']);
     // Change login admin password
     Route::put('/admin/change-password', [AdminAuthContorller::class, 'changePassword']);
 
     // Show all admin list
-    Route::get('admin/list', [AdminController::class, 'listAdmins']);
+    Route::get('/admin/list', [AdminController::class, 'listAdmins']);
     // Toggle admin status (active/inactive)
-    Route::put('admin/status/{id}/toggle', [AdminController::class, 'toggleAdminStatus']);
+    Route::put('/admin/status/{id}/toggle', [AdminController::class, 'toggleAdminStatus']);
     // edit admin information
-    Route::get('admin/edit/{id}', [AdminController::class, 'editAdmin']);
+    Route::get('/admin/edit/{id}', [AdminController::class, 'editAdmin']);
     // Update admin information
-    Route::put('admin/{id}/update', [AdminController::class, 'updateAdminById']);
+    Route::put('/admin/{id}/update', [AdminController::class, 'updateAdminById']);
     // Delete an admin by ID
     Route::delete('admin/{id}/delete', [AdminController::class, 'deleteAdmin']);
 
     // warehouse Type routes
     // Create warehouse type
-    Route::post('admin/warehouse-types', [WarehouseTypeContorller::class, 'createWarehouseType']);
+    Route::post('/admin/warehouse-types', [WarehouseTypeContorller::class, 'createWarehouseType']);
     // shwo all warehouse types
-    Route::get('admin/warehouse-types', [WarehouseTypeContorller::class, 'getAllWarehouseTypes']);
+    Route::get('/admin/warehouse-types', [WarehouseTypeContorller::class, 'getAllWarehouseTypes']);
     // shwo id wise warehouse types
-    Route::get('admin/warehouse-types/{id}', [WarehouseTypeContorller::class, 'getWarehouseTypeById']);
+    Route::get('/admin/warehouse-types/{id}', [WarehouseTypeContorller::class, 'getWarehouseTypeById']);
     // update warehouse type
-    Route::put('admin/warehouse-types/{id}/update', [WarehouseTypeContorller::class, 'updateWarehouseType']);
+    Route::put('/admin/warehouse-types/{id}/update', [WarehouseTypeContorller::class, 'updateWarehouseType']);
     // Delete a warehouse type
-    Route::delete('admin/warehouse-types/{id}/delete', [WarehouseTypeContorller::class, 'deleteWarehouseType']);
+    Route::delete('/admin/warehouse-types/{id}/delete', [WarehouseTypeContorller::class, 'deleteWarehouseType']);
 
     // Warehouse routes
     // Create warehouse
@@ -98,7 +98,7 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::post('/logout/user', [UserController::class, 'logout']);
 
     // shwo all warehouse types
-    Route::get('admin/warehouse-types', [WarehouseTypeContorller::class, 'getAllWarehouseTypes']);
+    Route::get('/admin/warehouse-types', [WarehouseTypeContorller::class, 'getAllWarehouseTypes']);
 
     // order requests
     Route::post('/create-order-request/user', [RequestController::class, 'createRequrstOrder']);
