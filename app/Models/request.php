@@ -36,4 +36,10 @@ class request extends Model
     {
         return $this->belongsTo(User::class, 'user_id');
     }
+
+    public function payments()
+    {
+        return $this->hasMany(payment::class, 'relatable_id')
+            ->where('type', 'request');
+    }
 }
