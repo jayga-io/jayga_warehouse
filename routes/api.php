@@ -8,6 +8,7 @@ use App\Http\Controllers\user\UserController;
 use App\Http\Controllers\request\RequestController;
 use App\Http\Controllers\order\OrderController;
 use App\Http\Controllers\RequestFile\RequestFileController;
+use App\Http\Controllers\payment\PaymentController;
 
 // Admin Routes
 // Admin registration
@@ -85,6 +86,13 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::get('/admin/requests/{id}', [RequestController::class, 'showRequestById']);
     // Request status change
     Route::post('/requests/{id}/status', [RequestController::class, 'updateStatus']);
+
+    // Payment routes
+    // advance payment route create by admin
+    Route::post('/payments', [PaymentController::class, 'advancedPayment']);
+    // Change payment status by admin
+    Route::put('payment/{id}/status', [PaymentController::class, 'updatePaymentStatus']);
+
 
     // Order routes
     // plase order

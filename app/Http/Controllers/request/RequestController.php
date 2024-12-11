@@ -114,8 +114,8 @@ class RequestController extends Controller
             // Fetch the logged-in user's ID
             $userId = $request->user()->id;
 
-            // Fetch the specific request for the logged-in user, including warehouseType
-            $orderRequest = OrderRequest::with(['warehouseType', 'items'])
+            // Fetch the specific request for the logged-in user, including warehouseType and payments
+            $orderRequest = OrderRequest::with(['warehouseType', 'items', 'payments'])
                 ->where('user_id', $userId)
                 ->where('id', $id)
                 ->first();
@@ -132,7 +132,7 @@ class RequestController extends Controller
                 ->where('type', 'order_request')
                 ->get();
 
-            // Combine data from OrderRequest and related files
+            // Combine data from OrderRequest, related files
             $data = [
                 'order_request' => $orderRequest,
                 'related_files' => $requestFiles,
@@ -178,8 +178,8 @@ class RequestController extends Controller
     public function showRequestById($id)
     {
         try {
-            // Fetch the request by ID along with related data
-            $requestData = OrderRequest::with(['warehouseType', 'user', 'items'])
+            // Fetch the request by ID along with related data including payments
+            $requestData = OrderRequest::with(['warehouseType', 'user', 'items', 'payments'])
                 ->find($id);
 
             // Check if the request exists
