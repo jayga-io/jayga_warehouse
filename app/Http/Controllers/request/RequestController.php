@@ -218,7 +218,7 @@ class RequestController extends Controller
         try {
             // Validate the request input
             $validatedData = $request->validate([
-                'status' => 'required|integer|in:0,1,2,3',
+                'status' => 'required|integer',
             ]);
 
             // Find the order request by ID
