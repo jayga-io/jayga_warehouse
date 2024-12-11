@@ -90,6 +90,8 @@ Route::middleware('auth:sanctum')->group(function () {
     // Payment routes
     // advance payment route create by admin
     Route::post('/payments', [PaymentController::class, 'advancedPayment']);
+    // Change payment status by admin
+    Route::put('payment/{id}/status', [PaymentController::class, 'updatePaymentStatus']);
 
 
     // Order routes

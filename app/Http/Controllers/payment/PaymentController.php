@@ -55,4 +55,50 @@ class PaymentController extends Controller
             ], 500);
         }
     }
+
+    // change payment status by admin
+    public function updatePaymentStatus($id, Request $request)
+    {
+        try {
+            $validatedData = $request->validate([
+                'status' => 'required', // 0 = Pending, 1 = Completed
+            ]);
+
+            // Find the payment by ID
+            $payment = payment::find($id);
+
+            // Check if the payment exists
+            if (!$payment) {
+                return response()->json([
+                    'message' => 'Payment not found',
+                ], 404);
+            }
+
+            // Update the payment status
+            $payment->status = $validatedData['status'];
+            $payment->save();
+
+            // Log the activity using the helper
+            logAdminActivity(
+                $id,
+                Auth::id(),
+                'advance payment status update',
+                'payment'
+            );
+
+            // Return the updated payment details
+            return response()->json([
+                'message' => 'Payment status updated successfully',
+                'data' => $payment,
+            ], 200);
+        } catch (\Exception $e) {
+            // Log the exception details
+            LogHelper::logError('Something went wrong', $e->getMessage(), 'advance payment status change');
+            // Handle any unexpected errors
+            return response()->json([
+                'message' => 'An error occurred while updating the payment status',
+                'error' => $e->getMessage(),
+            ], 500);
+        }
+    }
 }
