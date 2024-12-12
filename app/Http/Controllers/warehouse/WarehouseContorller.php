@@ -45,7 +45,7 @@ class WarehouseContorller extends Controller
             }
 
             // Create the warehouse
-            $warehouse = Warehouse::create([
+            $warehouse = warehouse::create([
                 'location' => $request->location,
                 'latitude' => $request->latitude,
                 'longitude' => $request->longitude,

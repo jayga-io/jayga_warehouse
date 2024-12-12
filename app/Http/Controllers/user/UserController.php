@@ -172,4 +172,43 @@ class UserController extends Controller
             ], 500);
         }
     }
+
+    // show all user
+    public function getAllUsers()
+    {
+        try {
+            // Paginate the users and show 15 per page
+            $users = User::select([
+                'id',
+                'name',
+                'email',
+                'phone',
+                'company_name',
+                'industry_type',
+                'status',
+                'is_suspended',
+                'fcm_token',
+                'auth_token',
+                'profile_image',
+                'description',
+                'address',
+                'latitude',
+                'longitude',
+                'created_at',
+                'updated_at',
+            ])->paginate(15); // 15 users per page
+
+            // Return the data with pagination information
+            return response()->json([
+                'message' => 'Users fetched successfully.',
+                'data' => $users,
+            ], 200);
+        } catch (\Exception $e) {
+            // Handle errors
+            return response()->json([
+                'error' => 'Something went wrong',
+                'message' => $e->getMessage(),
+            ], 500);
+        }
+    }
 }

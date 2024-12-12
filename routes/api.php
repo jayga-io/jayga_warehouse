@@ -9,6 +9,7 @@ use App\Http\Controllers\request\RequestController;
 use App\Http\Controllers\order\OrderController;
 use App\Http\Controllers\RequestFile\RequestFileController;
 use App\Http\Controllers\payment\PaymentController;
+use App\Http\Controllers\logstatus\LogStatusController;
 
 // Admin Routes
 // Admin registration
@@ -97,6 +98,11 @@ Route::middleware('auth:sanctum')->group(function () {
     // Order routes
     // plase order
     Route::post('/place-order', [OrderController::class, 'placeOrder']);
+
+    // Show all LogStatus
+    Route::get('/log-status', [LogStatusController::class, 'showLogs']);
+    // Show all users 
+    Route::get('/users', [UserController::class, 'getAllUsers']);
 });
 
 // User api routes
