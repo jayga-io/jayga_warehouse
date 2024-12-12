@@ -211,4 +211,49 @@ class UserController extends Controller
             ], 500);
         }
     }
+
+    // show single user by id
+    public function showUser($id)
+    {
+        try {
+            // Fetch the user by its ID
+            $user = User::select([
+                'id',
+                'name',
+                'email',
+                'phone',
+                'company_name',
+                'industry_type',
+                'status',
+                'is_suspended',
+                'fcm_token',
+                'auth_token',
+                'profile_image',
+                'description',
+                'address',
+                'latitude',
+                'longitude',
+                'created_at',
+                'updated_at',
+            ])->findOrFail($id); 
+
+            // Return the user data
+            return response()->json([
+                'message' => 'User fetched successfully.',
+                'data' => $user,
+            ], 200);
+        } catch (\Illuminate\Database\Eloquent\ModelNotFoundException $e) {
+            // Handle case where user is not found
+            return response()->json([
+                'error' => 'User not found',
+                'message' => 'The user with the given ID does not exist.',
+            ], 404);
+        } catch (\Exception $e) {
+            // Handle other exceptions
+            return response()->json([
+                'error' => 'Something went wrong',
+                'message' => $e->getMessage(),
+            ], 500);
+        }
+    }
 }

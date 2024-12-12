@@ -101,9 +101,16 @@ Route::middleware('auth:sanctum')->group(function () {
 
     // Show all LogStatus
     Route::get('/log-status', [LogStatusController::class, 'showLogs']);
-    // Show all users 
+    // show log status by id
+    Route::get('/log-status/{id}', [LogStatusController::class, 'showLogStatus']);
+
+    // Show all users
     Route::get('/users', [UserController::class, 'getAllUsers']);
+    // show user by id
+    Route::get('/user/{id}', [UserController::class, 'showUser']);
 });
+
+
 
 // User api routes
 // user register
