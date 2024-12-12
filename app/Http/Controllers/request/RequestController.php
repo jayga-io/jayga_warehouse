@@ -89,8 +89,13 @@ class RequestController extends Controller
             // Fetch the logged-in user's ID
             $userId = $request->user()->id;
 
-            // Fetch all requests for the logged-in user with related warehouse and items
-            $userRequests = OrderRequest::with(['warehouse', 'items'])
+            // Fetch all requests for the logged-in user with related warehouse_type and items
+            $userRequests = OrderRequest::with([
+                'warehouseType' => function ($query) {
+                    $query->select('id', 'type_name', 'description', 'admin_id');
+                },
+                'items',
+            ])
                 ->where('user_id', $userId)
                 ->get();
 
@@ -106,6 +111,7 @@ class RequestController extends Controller
             ], 500);
         }
     }
+
 
     // shwo request by id
     public function getRequestById(Request $request, $id)
@@ -159,8 +165,16 @@ class RequestController extends Controller
     public function getAllRequestsForAdmin()
     {
         try {
-            // Fetch all request orders with warehouse and user details, along with items
-            $requests = OrderRequest::with(['warehouse', 'user', 'items'])->get();
+            // Fetch paginated request orders with warehouseType and user details, along with items
+            $requests = OrderRequest::with([
+                'warehouseType' => function ($query) {
+                    $query->select('id', 'type_name', 'description');
+                },
+                'user' => function ($query) {
+                    $query->select('id', 'name', 'email', 'phone', 'company_name', 'industry_type', 'status', 'profile_image', 'address', 'latitude', 'longitude');
+                },
+                'items',
+            ])->paginate(15);
 
             return response()->json([
                 'message' => 'All requests fetched successfully',
@@ -173,6 +187,7 @@ class RequestController extends Controller
             ], 500);
         }
     }
+
 
     // shwo request order by id in admin dashboard
     public function showRequestById($id)
@@ -191,6 +206,17 @@ class RequestController extends Controller
             $relatedFiles = RequestFile::where('relatable_id', $id)
                 ->where('type', 'order_request')
                 ->get();
+
+            // Remove sensitive or unnecessary user data
+            if ($requestData->user) {
+                $requestData->user->makeHidden([
+                    'password',
+                    'is_suspended',
+                    'fcm_token',
+                    'auth_token',
+                    'description',
+                ]);
+            }
 
             // Combine the request data with related files
             $data = [
@@ -211,6 +237,7 @@ class RequestController extends Controller
             ], 500);
         }
     }
+
 
     // update request order by id in admin dashboard
     public function updateStatus(Request $request, $id)

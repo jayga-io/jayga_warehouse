@@ -16,7 +16,8 @@ return new class extends Migration
             $table->string('trxed')->nullable();
             $table->string('type');
             $table->string('amount');
-            $table->integer('payment_id');
+            $table->integer('payment_id')->nullable();
+            $table->integer('order_list_id')->nullable();
             $table->timestamps();
         });
     }
