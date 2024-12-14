@@ -19,6 +19,7 @@ return new class extends Migration
             $table->integer('size');
             $table->string('start_date');
             $table->string('end_date');
+            $table->integer('warehouse_id')->nullable();
             $table->timestamps();
         });
     }

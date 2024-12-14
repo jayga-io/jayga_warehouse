@@ -77,6 +77,8 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::delete('/grids/{id}', [GridController::class, 'deleteGrid']);
     // Change grid status
     Route::patch('/grids/{id}/toggle-status', [GridController::class, 'toggleStatus']);
+    //Grid show by warehouse id
+    Route::get('/warehouses/grids/{warehouse_id}', [GridController::class, 'getGridsByWarehouse']);
 
     // Request order routes
     // show all request
@@ -85,8 +87,16 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::post('/request-files/admin', [RequestFileController::class, 'uploadRequestFilesadmin']);
     // show request by id
     Route::get('/admin/requests/{id}', [RequestController::class, 'showRequestById']);
+    // Request items by request id
+    Route::get('/requests/items/{request_id}', [RequestController::class, 'getItemsByRequest']);
+    // Change warehouse id or assign to warehouse
+    Route::patch('/requests/{id}/warehouse', [RequestController::class, 'updateWarehouse']);
     // Request status change
     Route::post('/requests/{id}/status', [RequestController::class, 'updateStatus']);
+    // Assign grid and items
+    Route::post('/assign-grids', [RequestController::class, 'assignGrids']);
+    // Fatch the assigned grid and items by request id
+    Route::get('/fetch-items-by-request/{request_id}', [RequestController::class, 'fetchItemsByRequest']);
 
     // Payment routes
     // advance payment route create by admin

@@ -13,6 +13,16 @@ class assign_grid extends Model
         'item_id',
         'grid_id',
         'quantity',
-        'order_list_id'
+        'request_id'
     ];
+
+    public function item()
+    {
+        return $this->belongsTo(item::class, 'item_id');
+    }
+
+    public function grid()
+    {
+        return $this->belongsTo(grid::class, 'grid_id');
+    }
 }

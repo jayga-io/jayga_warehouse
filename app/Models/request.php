@@ -14,7 +14,8 @@ class request extends Model
         'status',
         'size',
         'start_date',
-        'end_date'
+        'end_date',
+        'warehouse_id'
     ];
 
     public function warehouseType()

@@ -242,4 +242,29 @@ class GridController extends Controller
             ], 500);
         }
     }
+
+    // Grid show by warehouse id
+    public function getGridsByWarehouse($warehouse_id)
+    {
+        try {
+            // Fetch grids related to the warehouse ID
+            $grids = grid::where('warehouse_id', $warehouse_id)->get();
+
+            if ($grids->isEmpty()) {
+                return response()->json([
+                    'message' => 'No grids found for the specified warehouse ID',
+                ], 404);
+            }
+
+            return response()->json([
+                'message' => 'Grids retrieved successfully',
+                'grids' => $grids,
+            ], 200);
+        } catch (\Exception $e) {
+            return response()->json([
+                'message' => 'An error occurred',
+                'error' => $e->getMessage(),
+            ], 500);
+        }
+    }
 }

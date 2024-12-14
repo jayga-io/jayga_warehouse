@@ -13,13 +13,13 @@ return new class extends Migration
     {
         Schema::create('order_lists', function (Blueprint $table) {
             $table->id();
-            $table->integer('order_id');
+            $table->integer('request_id');
             $table->integer('status');
             $table->string('payment');
             $table->string('payment_status')->nullable();
-            $table->string('payment_type')->nullable();
             $table->string('start_date');
             $table->string('end_date');
+            $table->string('advanced')->nullable();
             $table->timestamps();
         });
     }

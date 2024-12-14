@@ -13,10 +13,10 @@ return new class extends Migration
     {
         Schema::create('assign_grids', function (Blueprint $table) {
             $table->id();
-            $table->integer('item_id');
+            $table->integer('item_id')->nullable();
             $table->integer('grid_id');
-            $table->integer('quantity');
-            $table->integer('order_list_id');
+            $table->integer('quantity')->nullable();
+            $table->integer('request_id');
             $table->timestamps();
         });
     }
