@@ -10,6 +10,7 @@ use App\Http\Controllers\order\OrderController;
 use App\Http\Controllers\RequestFile\RequestFileController;
 use App\Http\Controllers\payment\PaymentController;
 use App\Http\Controllers\logstatus\LogStatusController;
+use App\Http\Controllers\AssignedGrid\AssignGridController;
 
 // Admin Routes
 // Admin registration
@@ -94,9 +95,9 @@ Route::middleware('auth:sanctum')->group(function () {
     // Request status change
     Route::post('/requests/{id}/status', [RequestController::class, 'updateStatus']);
     // Assign grid and items
-    Route::post('/assign-grids', [RequestController::class, 'assignGrids']);
+    Route::post('/assign-grids', [AssignGridController::class, 'assignGrids']);
     // Fatch the assigned grid and items by request id
-    Route::get('/fetch-items-by-request/{request_id}', [RequestController::class, 'fetchItemsByRequest']);
+    Route::get('/fetch-items-by-request/{request_id}', [AssignGridController::class, 'fetchItemsByRequest']);
 
     // Payment routes
     // advance payment route create by admin
