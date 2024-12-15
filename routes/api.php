@@ -31,13 +31,13 @@ Route::middleware('auth:sanctum')->group(function () {
     // Show all admin list
     Route::get('/admin/list', [AdminController::class, 'listAdmins']);
     // Toggle admin status (active/inactive)
-    Route::put('/admin/status/{id}/toggle', [AdminController::class, 'toggleAdminStatus']);
+    Route::put('/admin/status/toggle/{id}', [AdminController::class, 'toggleAdminStatus']);
     // edit admin information
     Route::get('/admin/edit/{id}', [AdminController::class, 'editAdmin']);
     // Update admin information
-    Route::put('/admin/{id}/update', [AdminController::class, 'updateAdminById']);
+    Route::put('/admin/update/{id}', [AdminController::class, 'updateAdminById']);
     // Delete an admin by ID
-    Route::delete('admin/{id}/delete', [AdminController::class, 'deleteAdmin']);
+    Route::delete('/admin/delete/{id}', [AdminController::class, 'deleteAdmin']);
 
     // warehouse Type routes
     // Create warehouse type
@@ -47,9 +47,9 @@ Route::middleware('auth:sanctum')->group(function () {
     // shwo id wise warehouse types
     Route::get('/admin/warehouse-types/{id}', [WarehouseTypeContorller::class, 'getWarehouseTypeById']);
     // update warehouse type
-    Route::put('/admin/warehouse-types/{id}/update', [WarehouseTypeContorller::class, 'updateWarehouseType']);
+    Route::put('/admin/warehouse-types/update/{id}', [WarehouseTypeContorller::class, 'updateWarehouseType']);
     // Delete a warehouse type
-    Route::delete('/admin/warehouse-types/{id}/delete', [WarehouseTypeContorller::class, 'deleteWarehouseType']);
+    Route::delete('/admin/warehouse-types/delete/{id}', [WarehouseTypeContorller::class, 'deleteWarehouseType']);
 
     // Warehouse routes
     // Create warehouse
@@ -59,7 +59,7 @@ Route::middleware('auth:sanctum')->group(function () {
     // shwo warehouse by id
     Route::get('/warehouses/{id}', [WarehouseContorller::class, 'showWarehouseById']);
     // change status
-    Route::put('/warehouses/{id}/toggle-active', [WarehouseContorller::class, 'toggleIsActive']);
+    Route::put('/warehouses/toggle-active/{id}', [WarehouseContorller::class, 'toggleIsActive']);
     // Update warehouse
     Route::put('warehouses/{id}', [WarehouseContorller::class, 'updateWarehouse']);
     // Delete a warehouse
@@ -77,7 +77,7 @@ Route::middleware('auth:sanctum')->group(function () {
     // Delete a grid
     Route::delete('/grids/{id}', [GridController::class, 'deleteGrid']);
     // Change grid status
-    Route::patch('/grids/{id}/toggle-status', [GridController::class, 'toggleStatus']);
+    Route::patch('/grids/toggle-status/{id}', [GridController::class, 'toggleStatus']);
     //Grid show by warehouse id
     Route::get('/warehouses/grids/{warehouse_id}', [GridController::class, 'getGridsByWarehouse']);
 
@@ -91,9 +91,9 @@ Route::middleware('auth:sanctum')->group(function () {
     // Request items by request id
     Route::get('/requests/items/{request_id}', [RequestController::class, 'getItemsByRequest']);
     // Change warehouse id or assign to warehouse
-    Route::patch('/requests/{id}/warehouse', [RequestController::class, 'updateWarehouse']);
+    Route::patch('/requests/warehouse/{id}', [RequestController::class, 'updateWarehouse']);
     // Request status change
-    Route::post('/requests/{id}/status', [RequestController::class, 'updateStatus']);
+    Route::post('/requests/status/{id}', [RequestController::class, 'updateStatus']);
     // Assign grid and items
     Route::post('/assign-grids', [AssignGridController::class, 'assignGrids']);
     // Fatch the assigned grid and items by request id
@@ -103,7 +103,7 @@ Route::middleware('auth:sanctum')->group(function () {
     // advance payment route create by admin
     Route::post('/payments', [PaymentController::class, 'advancedPayment']);
     // Change payment status by admin
-    Route::put('payment/{id}/status', [PaymentController::class, 'updatePaymentStatus']);
+    Route::put('payment/status/{id}', [PaymentController::class, 'updatePaymentStatus']);
 
 
     // Order routes
