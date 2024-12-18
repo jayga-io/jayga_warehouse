@@ -11,6 +11,7 @@ use App\Http\Controllers\RequestFile\RequestFileController;
 use App\Http\Controllers\payment\PaymentController;
 use App\Http\Controllers\logstatus\LogStatusController;
 use App\Http\Controllers\AssignedGrid\AssignGridController;
+use App\Http\Controllers\AdminActivity\AdminActivityController;
 
 // Admin Routes
 // Admin registration
@@ -104,6 +105,10 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::post('/payments', [PaymentController::class, 'advancedPayment']);
     // Change payment status by admin
     Route::put('payment/status/{id}', [PaymentController::class, 'updatePaymentStatus']);
+    // shwo all payments
+    Route::get('/payments', [PaymentController::class, 'showAllPayments']);
+    // shwo payment by id
+    Route::get('/payments/{id}', [PaymentController::class, 'showpaymentById']);
 
 
     // Order routes
@@ -119,6 +124,11 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::get('/users', [UserController::class, 'getAllUsers']);
     // show user by id
     Route::get('/user/{id}', [UserController::class, 'showUser']);
+
+    // show all admin activity list
+    Route::get('/adminactivities', [AdminActivityController::class, 'shwoAllActivity']);
+    // show activity by id
+    Route::get('/adminactivities/{id}', [AdminActivityController::class, 'showActivityByid']);
 });
 
 

@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use App\Models\payment;
 use Illuminate\Support\Facades\Auth;
 use App\Helpers\LogHelper;
+use Illuminate\Support\Facades\Log;
 
 class PaymentController extends Controller
 {
@@ -98,6 +99,62 @@ class PaymentController extends Controller
             return response()->json([
                 'message' => 'An error occurred while updating the payment status',
                 'error' => $e->getMessage(),
+            ], 500);
+        }
+    }
+
+    // show all payment
+    public function showAllPayments()
+    {
+        try {
+            // Fetch all payments
+            $payments = payment::all();
+
+            // Return the data as a JSON response
+            return response()->json([
+                'success' => true,
+                'data' => $payments
+            ], 200);
+        } catch (\Exception $e) {
+            // Log the error for debugging purposes
+            Log::error('Error fetching payments: ' . $e->getMessage());
+
+            // Return an error JSON response
+            return response()->json([
+                'success' => false,
+                'message' => 'Failed to fetch payments. Please try again later.'
+            ], 500);
+        }
+    }
+
+    // shwo payment by id
+    public function showpaymentById($id)
+    {
+        try {
+            // Fetch the payment by ID
+            $payment = payment::find($id);
+
+            // Check if the payment exists
+            if (!$payment) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Payment not found.'
+                ], 404);
+            }
+
+            // Return the payment data as a JSON response
+            return response()->json([
+                'success' => true,
+                'data' => $payment
+            ], 200);
+        } catch (\Exception $e) {
+            // Log the error for debugging
+            Log::error('Error fetching payment: ' . $e->getMessage());
+
+            // Return an error response
+            return response()->json([
+                'success' => false,
+                'message' => 'Failed to fetch payment. Please try again later.'
             ], 500);
         }
     }
