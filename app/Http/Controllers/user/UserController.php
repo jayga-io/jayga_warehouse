@@ -302,6 +302,8 @@ class UserController extends Controller
                 'errors' => $e->errors(),
             ], 422);
         } catch (\Exception $e) {
+            // Log the exception details
+            LogHelper::logError('Something went wrong', $e->getMessage(), 'user profile update');
             return response()->json([
                 'message' => 'An error occurred while updating the user.',
                 'error' => $e->getMessage(),
@@ -347,6 +349,8 @@ class UserController extends Controller
                 'errors' => $e->errors(),
             ], 422);
         } catch (\Exception $e) {
+            // Log the exception details
+            LogHelper::logError('Something went wrong', $e->getMessage(), 'user password changed');
             return response()->json([
                 'message' => 'An error occurred while changing the password.',
                 'error' => $e->getMessage(),
