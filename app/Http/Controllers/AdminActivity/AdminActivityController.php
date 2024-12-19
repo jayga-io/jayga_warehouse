@@ -33,6 +33,8 @@ class AdminActivityController extends Controller
         }
     }
 
+
+
     // shwo activities by id
     public function showActivityByid($id)
     {

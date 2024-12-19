@@ -113,6 +113,7 @@ class WarehouseContorller extends Controller
     }
 
 
+
     // show all warehouse
     public function showWarehouse()
     {
@@ -153,6 +154,7 @@ class WarehouseContorller extends Controller
             ], 500);
         }
     }
+
 
 
     // show warehouse by id
@@ -202,6 +204,7 @@ class WarehouseContorller extends Controller
     }
 
 
+
     // activate status change
     public function toggleIsActive($id)
     {
@@ -237,6 +240,8 @@ class WarehouseContorller extends Controller
             ], 500);
         }
     }
+
+
 
     // update warehouse
     public function updateWarehouse(Request $request, $id)

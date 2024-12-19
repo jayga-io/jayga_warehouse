@@ -57,6 +57,8 @@ class PaymentController extends Controller
         }
     }
 
+
+
     // change payment status by admin
     public function updatePaymentStatus($id, Request $request)
     {
@@ -103,6 +105,8 @@ class PaymentController extends Controller
         }
     }
 
+
+
     // show all payment
     public function showAllPayments()
     {
@@ -126,6 +130,8 @@ class PaymentController extends Controller
             ], 500);
         }
     }
+
+
 
     // shwo payment by id
     public function showpaymentById($id)

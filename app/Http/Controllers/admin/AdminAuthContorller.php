@@ -84,6 +84,7 @@ class AdminAuthContorller extends Controller
     }
 
 
+
     // Admin login
     public function login(Request $request)
     {
@@ -143,6 +144,7 @@ class AdminAuthContorller extends Controller
     }
 
 
+
     // Admin logout
     public function logout(Request $request)
     {
@@ -167,6 +169,8 @@ class AdminAuthContorller extends Controller
             ], 500);
         }
     }
+
+
 
     // update the login admin profile
     public function updateProfile(Request $request)
@@ -227,6 +231,8 @@ class AdminAuthContorller extends Controller
             ], 500);
         }
     }
+
+
 
     // change login admin password
     public function changePassword(Request $request)

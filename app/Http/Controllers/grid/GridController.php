@@ -53,6 +53,8 @@ class GridController extends Controller
         }
     }
 
+
+
     // show all grids
     public function showAllGrids()
     {
@@ -73,6 +75,8 @@ class GridController extends Controller
             ], 500);
         }
     }
+
+
 
     // grid shwo by id
     public function showGridById($id)
@@ -106,6 +110,7 @@ class GridController extends Controller
             ], 500);
         }
     }
+
 
 
     // update grid
@@ -162,6 +167,8 @@ class GridController extends Controller
         }
     }
 
+
+
     // delete grid
     public function deleteGrid($id)
     {
@@ -200,6 +207,7 @@ class GridController extends Controller
             ], 500);
         }
     }
+
 
 
     // Change grid status
@@ -242,6 +250,8 @@ class GridController extends Controller
             ], 500);
         }
     }
+
+
 
     // Grid show by warehouse id
     public function getGridsByWarehouse($warehouse_id)

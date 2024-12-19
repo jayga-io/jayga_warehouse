@@ -55,6 +55,8 @@ class AssignGridController extends Controller
         }
     }
 
+
+
     //Fatch the assigned grid and items by request id
     public function fetchItemsByRequest($request_id)
     {

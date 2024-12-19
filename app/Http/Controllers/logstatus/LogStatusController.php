@@ -29,6 +29,8 @@ class LogStatusController extends Controller
         }
     }
 
+
+
     // show single logstatus by id
     public function showLogStatus($id)
     {

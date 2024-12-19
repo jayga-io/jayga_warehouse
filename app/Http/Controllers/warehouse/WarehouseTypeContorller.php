@@ -194,5 +194,4 @@ class WarehouseTypeContorller extends Controller
             ], 500);
         }
     }
-
 }

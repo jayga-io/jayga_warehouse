@@ -83,6 +83,7 @@ class RequestController extends Controller
     }
 
 
+
     // show all request which created by login user
     public function getUserRequests(Request $request)
     {
@@ -112,6 +113,7 @@ class RequestController extends Controller
             ], 500);
         }
     }
+
 
 
     // shwo request by id
@@ -162,6 +164,7 @@ class RequestController extends Controller
     }
 
 
+
     // show all requests order in admin dashboard
     public function getAllRequestsForAdmin()
     {
@@ -188,6 +191,7 @@ class RequestController extends Controller
             ], 500);
         }
     }
+
 
 
     // shwo request order by id in admin dashboard
@@ -240,6 +244,7 @@ class RequestController extends Controller
     }
 
 
+
     // update request order by id in admin dashboard
     public function updateStatus(Request $request, $id)
     {
@@ -286,6 +291,8 @@ class RequestController extends Controller
             return response()->json(['message' => 'An error occurred', 'error' => $e->getMessage()], 500);
         }
     }
+
+
 
     // assign warehouse
     public function updateWarehouse(Request $request, $id)
@@ -335,6 +342,8 @@ class RequestController extends Controller
             ], 500);
         }
     }
+
+
 
     // Request items by request id
     public function getItemsByRequest($request_id)

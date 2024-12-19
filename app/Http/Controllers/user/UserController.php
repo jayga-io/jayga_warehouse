@@ -78,6 +78,7 @@ class UserController extends Controller
     }
 
 
+
     // user login
     public function login(Request $request)
     {
@@ -127,6 +128,8 @@ class UserController extends Controller
         }
     }
 
+
+
     // shwo login user information
     public function getUserInfo()
     {
@@ -154,6 +157,8 @@ class UserController extends Controller
         }
     }
 
+
+
     // Logout the user
     public function logout(Request $request)
     {
@@ -174,6 +179,8 @@ class UserController extends Controller
             ], 500);
         }
     }
+
+
 
     // show all user
     public function getAllUsers()
@@ -213,6 +220,8 @@ class UserController extends Controller
             ], 500);
         }
     }
+
+
 
     // show single user by id
     public function showUser($id)
@@ -258,6 +267,8 @@ class UserController extends Controller
             ], 500);
         }
     }
+
+
 
     // update user info
     public function updateuserprofile(Request $request, $id)
@@ -310,6 +321,8 @@ class UserController extends Controller
             ], 500);
         }
     }
+
+
 
     // change password
     public function changePassword(Request $request)
