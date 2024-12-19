@@ -21,13 +21,13 @@ Route::post('/admin/login', [AdminAuthContorller::class, 'login']);
 Route::middleware('auth:sanctum')->group(function () {
     // Logout admin
     Route::post('/admin/logout', [AdminAuthContorller::class, 'logout']);
-
     // show login admin information
     Route::get('/admin/info', [AdminController::class, 'showAdminInfo']);
     // Update login admin information
     Route::put('/admin/update-profile', [AdminAuthContorller::class, 'updateProfile']);
     // Change login admin password
     Route::put('/admin/change-password', [AdminAuthContorller::class, 'changePassword']);
+
 
     // Show all admin list
     Route::get('/admin/list', [AdminController::class, 'listAdmins']);
@@ -40,6 +40,7 @@ Route::middleware('auth:sanctum')->group(function () {
     // Delete an admin by ID
     Route::delete('/admin/delete/{id}', [AdminController::class, 'deleteAdmin']);
 
+
     // warehouse Type routes
     // Create warehouse type
     Route::post('/admin/warehouse-types', [WarehouseTypeContorller::class, 'createWarehouseType']);
@@ -51,6 +52,7 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::put('/admin/warehouse-types/update/{id}', [WarehouseTypeContorller::class, 'updateWarehouseType']);
     // Delete a warehouse type
     Route::delete('/admin/warehouse-types/delete/{id}', [WarehouseTypeContorller::class, 'deleteWarehouseType']);
+
 
     // Warehouse routes
     // Create warehouse
@@ -65,6 +67,7 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::put('warehouses/{id}', [WarehouseContorller::class, 'updateWarehouse']);
     // Delete a warehouse
     Route::delete('/warehouses/{id}', [WarehouseContorller::class, 'deleteWarehouse']);
+
 
     // Grid routts
     // create gird
@@ -81,6 +84,7 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::patch('/grids/toggle-status/{id}', [GridController::class, 'toggleStatus']);
     //Grid show by warehouse id
     Route::get('/warehouses/grids/{warehouse_id}', [GridController::class, 'getGridsByWarehouse']);
+
 
     // Request order routes
     // show all request
@@ -100,6 +104,7 @@ Route::middleware('auth:sanctum')->group(function () {
     // Fatch the assigned grid and items by request id
     Route::get('/fetch-items-by-request/{request_id}', [AssignGridController::class, 'fetchItemsByRequest']);
 
+
     // Payment routes
     // advance payment route create by admin
     Route::post('/payments', [PaymentController::class, 'advancedPayment']);
@@ -115,10 +120,12 @@ Route::middleware('auth:sanctum')->group(function () {
     // plase order
     Route::post('/place-order', [OrderController::class, 'placeOrder']);
 
+
     // Show all LogStatus
     Route::get('/log-status', [LogStatusController::class, 'showLogs']);
     // show log status by id
     Route::get('/log-status/{id}', [LogStatusController::class, 'showLogStatus']);
+
 
     // Show all users
     Route::get('/users', [UserController::class, 'getAllUsers']);
@@ -126,6 +133,7 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::get('/user/{id}', [UserController::class, 'showUser']);
     // update user profile
     Route::put('/user/{id}', [UserController::class, 'updateuserprofile']);
+
 
     // show all admin activity list
     Route::get('/adminactivities', [AdminActivityController::class, 'shwoAllActivity']);
@@ -147,12 +155,13 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::put('/user/{id}', [UserController::class, 'updateuserprofile']);
     // change user password
     Route::post('/user/change-password', [UserController::class, 'changePassword']);
-
     // user logout
     Route::post('/logout/user', [UserController::class, 'logout']);
 
+
     // shwo all warehouse types
     Route::get('/admin/warehouse-types', [WarehouseTypeContorller::class, 'getAllWarehouseTypes']);
+
 
     // order requests
     Route::post('/create-order-request/user', [RequestController::class, 'createRequrstOrder']);
