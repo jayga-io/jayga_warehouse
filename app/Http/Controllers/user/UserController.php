@@ -9,6 +9,8 @@ use Illuminate\Support\Facades\Validator;
 use App\Models\User;
 use Illuminate\Support\Facades\Auth;
 use App\Helpers\LogHelper;
+use Illuminate\Support\Facades\DB;
+
 
 
 class UserController extends Controller
@@ -235,7 +237,7 @@ class UserController extends Controller
                 'longitude',
                 'created_at',
                 'updated_at',
-            ])->findOrFail($id); 
+            ])->findOrFail($id);
 
             // Return the user data
             return response()->json([
@@ -253,6 +255,101 @@ class UserController extends Controller
             return response()->json([
                 'error' => 'Something went wrong',
                 'message' => $e->getMessage(),
+            ], 500);
+        }
+    }
+
+    // update user info
+    public function updateuserprofile(Request $request, $id)
+    {
+        try {
+            // Validate the incoming data
+            $request->validate([
+                'name' => 'string|max:255',
+                'email' => 'email|unique:users,email,' . $id,
+                'phone' => 'string|max:15',
+                'company_name' => 'string|nullable|max:255',
+                'industry_type' => 'string|nullable|max:255',
+                'description' => 'string|nullable|max:500',
+                'address' => 'string|nullable|max:255',
+            ]);
+
+            // Find the user
+            $user = User::findOrFail($id);
+
+            // Update the user's information
+            $user->update($request->only([
+                'name',
+                'email',
+                'phone',
+                'company_name',
+                'industry_type',
+                'description',
+                'address',
+            ]));
+
+            return response()->json([
+                'message' => 'User updated successfully',
+                'user' => $user,
+            ], 200);
+        } catch (\Illuminate\Database\Eloquent\ModelNotFoundException $e) {
+            return response()->json([
+                'message' => 'User not found.',
+            ], 404);
+        } catch (\Illuminate\Validation\ValidationException $e) {
+            return response()->json([
+                'message' => 'Validation error.',
+                'errors' => $e->errors(),
+            ], 422);
+        } catch (\Exception $e) {
+            return response()->json([
+                'message' => 'An error occurred while updating the user.',
+                'error' => $e->getMessage(),
+            ], 500);
+        }
+    }
+
+    // change password
+    public function changePassword(Request $request)
+    {
+        try {
+            // Validate the request data
+            $request->validate([
+                'current_password' => 'required|string',
+                'new_password' => 'required|string|min:8|confirmed',
+            ]);
+
+            // Get the authenticated user
+            $user = auth()->user();
+            if (!$user) {
+                return response()->json(['message' => 'User not authenticated'], 401);
+            }
+
+            // Check if the current password is correct
+            if (!Hash::check($request->current_password, $user->password)) {
+                return response()->json([
+                    'message' => 'Current password is incorrect.',
+                ], 400);
+            }
+
+            // Hash the new password
+            $hashedPassword = Hash::make($request->new_password);
+
+            // Update the password using raw SQL
+            DB::update('UPDATE users SET password = ? WHERE id = ?', [$hashedPassword, $user->id]);
+
+            return response()->json([
+                'message' => 'Password changed successfully.',
+            ], 200);
+        } catch (\Illuminate\Validation\ValidationException $e) {
+            return response()->json([
+                'message' => 'Validation error.',
+                'errors' => $e->errors(),
+            ], 422);
+        } catch (\Exception $e) {
+            return response()->json([
+                'message' => 'An error occurred while changing the password.',
+                'error' => $e->getMessage(),
             ], 500);
         }
     }

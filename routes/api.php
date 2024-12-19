@@ -124,6 +124,8 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::get('/users', [UserController::class, 'getAllUsers']);
     // show user by id
     Route::get('/user/{id}', [UserController::class, 'showUser']);
+    // update user profile
+    Route::put('/user/{id}', [UserController::class, 'updateuserprofile']);
 
     // show all admin activity list
     Route::get('/adminactivities', [AdminActivityController::class, 'shwoAllActivity']);
@@ -141,6 +143,11 @@ Route::post('/login/user', [UserController::class, 'login']);
 Route::middleware('auth:sanctum')->group(function () {
     // show login user info
     Route::get('/user', [UserController::class, 'getUserInfo']);
+    // update user profile
+    Route::put('/user/{id}', [UserController::class, 'updateuserprofile']);
+    // change user password
+    Route::post('/user/change-password', [UserController::class, 'changePassword']);
+
     // user logout
     Route::post('/logout/user', [UserController::class, 'logout']);
 
